@@ -51,7 +51,7 @@ const C={
 const FD="'Cinzel','Palatino Linotype',serif";
 const FB="'Crimson Text','Palatino Linotype',serif";
 
-/* ═══ QUEST DATA (no in-game trophies, only Steam ach badges) ═══ */
+/* ═══ QUEST DATA ═══ */
 const PROLOGUE={
   main:[
     {id:'pm1',name:'At the Fore'},
@@ -79,7 +79,7 @@ const CHAPTER1={
     {id:'1m4',name:'By the Gods — Stringing Up Sods'},
     {id:'1m5',name:'The Floating Prison',note:'Last quest — unlocks Chapter II'},
     {id:'1m6',name:'Indecent Proposal'},
-    {id:'1m7',name:'The Kayran',achId:'s2',ach:{label:'Oh My God! You Killed The Kayran! You Bastards!',hint:'Automatic on killing the Kayran.'}},
+    {id:'1m7',name:'The Kayran'},
     {id:'1m8',name:'The Kayran: A Matter of Price'},
     {id:'1m9',name:'The Kayran: Ostmurk'},
     {id:'1m10',name:'The Rose of Remembrance'},
@@ -90,7 +90,7 @@ const CHAPTER1={
     {id:'1s2',name:"Blasphemer's Outfit",darkOnly:true},
     {id:'1s3',name:'Bring it On: Flotsam'},
     {id:'1s4',name:'Fight Club'},
-    {id:'1s5',name:'Hung Over',note:'Ask Cedric about kayrant first; ask Triss for tattoo removal'},
+    {id:'1s5',name:'Hung Over',note:'Ask Cedric about kayran first; ask Triss for tattoo removal'},
     {id:'1s6',name:'In the Claws of Madness'},
     {id:'1s7',name:'Little Shop of Dreams',note:'BUY FLOWERS for Triss from the flower vendor here — very easy to miss!'},
     {id:'1s8',name:'Malena'},
@@ -102,7 +102,7 @@ const CHAPTER1={
     {id:'1s14',name:'The Endrega Contract'},
     {id:'1s15',name:'The Nekker Contract'},
     {id:'1s16',name:'The Scent of Incense',note:'Give a formula — otherwise it fails'},
-    {id:'1s17',name:'Troll Trouble',ach:{label:'Trollslayer / Troll Trouble',hint:'Kill troll = Trollslayer. Spare troll = Troll Trouble. Mutually exclusive!'}},
+    {id:'1s17',name:'Troll Trouble'},
   ],
   bonus:[{id:'1b1',name:'Sex with Triss Merigold'}],
 };
@@ -223,58 +223,53 @@ const CHAPTER3={
   },
 };
 
-/* ═══ BUILD (35 points in order, user's exact spec)
-   mutable = has a mutagen slot — take talent FIRST, then apply Power Mutagen
-   skip    = intentionally empty slot
-   tree    = Training / Alchemy / Swordsmanship
-═══ */
+/* ═══ BUILD ═══ */
 const BUILD_SKILLS=[
-  // ── TRAINING (pts 1-7) ─────────────────────────────────────
-  {id:'b2', n:1,  tree:'Training',   name:'Vigor Regeneration',  rank:1},
-  {id:'b3', n:2,  tree:'Training',   name:'Vigor Regeneration',  rank:2},
-  {id:'b4', n:3,  tree:'Training',   name:'Parrying',            rank:1},
-  {id:'b5', n:4,  tree:'Training',   name:'Fortitude',           rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
-  {id:'b6', n:5,  tree:'Training',   name:'Fortitude',           rank:2},
-  {id:'b7', n:6,  tree:'Training',   name:'Parrying',            rank:2},
-  // ── ALCHEMY pts 8-13 ──────────────────────────────────────
-  {id:'b8', n:7,  tree:'Alchemy',    name:'Alchemist',           rank:1},
-  {id:'b9', n:8,  tree:'Alchemy',    name:'Side Effect'},
-  {id:'b10',n:9, tree:'Alchemy',    name:'Harvester'},
-  {id:'b11',n:10, tree:'Alchemy',    name:'Catalysis',           rank:1},
-  {id:'b12',n:11, tree:'Alchemy',    name:'Catalysis',           rank:2},
-  {id:'b13',n:12, tree:'Alchemy',    name:'Alchemist',           rank:2},
-  // ── SWORDSMANSHIP pts 14-26 ───────────────────────────────
-  {id:'b14',n:13, tree:'Swordsmanship', name:'Footwork'},
-  {id:'b15',n:14, tree:'Swordsmanship', name:'Position',         rank:1},
-  {id:'b16',n:15, tree:'Swordsmanship', name:'Position',         rank:2},
-  {id:'b17',n:16, tree:'Swordsmanship', name:'Violence',         rank:1},
-  {id:'b18',n:17, tree:'Swordsmanship', name:'Violence',         rank:2},
-  {id:'b19',n:18, tree:'Swordsmanship', name:'Whirl'},
-  {id:'b20',n:19, tree:'Swordsmanship', name:'Hardy',            rank:1},
-  {id:'b21',n:20, tree:'Swordsmanship', name:'Finesse'},
-  {id:'b22',n:21, tree:'Swordsmanship', name:'Invincible',       rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
-  {id:'b23',n:22, tree:'Swordsmanship', name:'Invincible',       rank:2},
-  {id:'b24',n:23, tree:'Swordsmanship', name:'Hardy',            rank:2},
-  {id:'b25',n:24, tree:'Swordsmanship', name:'Combat Acumen',    rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
-  {id:'b26',n:25, tree:'Swordsmanship', name:'Combat Acumen',    rank:2},
-  // ── ALCHEMY continued pts 27-35 ───────────────────────────
-  {id:'b27',n:26, tree:'Alchemy',    name:'Specialization: Oils'},
-  {id:'b28',n:27, tree:'Alchemy',    name:'Impregnation',        rank:1},
-  {id:'b29',n:28, tree:'Alchemy',    name:'Impregnation',        rank:2},
-  {id:'b30',n:29, tree:'Alchemy',    name:'Taster',              rank:1},
-  {id:'b31',n:30, tree:'Alchemy',    name:'Taster',              rank:2},
-  {id:'b32',n:31, tree:'Alchemy',    name:'Metathesis',          rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
-  {id:'b33',n:32, tree:'Alchemy',    name:'Metathesis',          rank:2},
-  {id:'b34',n:33, tree:'Alchemy',    name:'Condensation',        mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
-  {id:'b35',n:34, tree:'Alchemy',    name:'Mutant',              mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
+  // ── TRAINING ─────────────────────────────────────
+  {id:'b2', n:2, tree:'Training',   name:'Vigor Regeneration',  rank:1},
+  {id:'b3', n:3, tree:'Training',   name:'Vigor Regeneration',  rank:2},
+  {id:'b4', n:4, tree:'Training',   name:'Parrying',            rank:1},
+  {id:'b5', n:5, tree:'Training',   name:'Fortitude',           rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
+  {id:'b6', n:6, tree:'Training',   name:'Fortitude',           rank:2},
+  {id:'b7', n:7, tree:'Training',   name:'Parrying',            rank:2},
+  // ── ALCHEMY ──────────────────────────────────────
+  {id:'b8', n:8, tree:'Alchemy',    name:'Alchemist',           rank:1},
+  {id:'b9', n:9, tree:'Alchemy',    name:'Side Effect'},
+  {id:'b10',n:10,tree:'Alchemy',    name:'Harvester'},
+  {id:'b11',n:11,tree:'Alchemy',    name:'Catalysis',           rank:1},
+  {id:'b12',n:12,tree:'Alchemy',    name:'Catalysis',           rank:2},
+  {id:'b13',n:13,tree:'Alchemy',    name:'Alchemist',           rank:2},
+  // ── SWORDSMANSHIP ───────────────────────────────
+  {id:'b14',n:14,tree:'Swordsmanship', name:'Feetwork'},
+  {id:'b15',n:15,tree:'Swordsmanship', name:'Position',         rank:1},
+  {id:'b16',n:16,tree:'Swordsmanship', name:'Position',         rank:2},
+  {id:'b17',n:17,tree:'Swordsmanship', name:'Violence',         rank:1},
+  {id:'b18',n:18,tree:'Swordsmanship', name:'Violence',         rank:2},
+  {id:'b19',n:19,tree:'Swordsmanship', name:'Whirl'},
+  {id:'b20',n:20,tree:'Swordsmanship', name:'Hardy',            rank:1},
+  {id:'b21',n:21,tree:'Swordsmanship', name:'Finesse'},
+  {id:'b22',n:22,tree:'Swordsmanship', name:'Invincible',       rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
+  {id:'b23',n:23,tree:'Swordsmanship', name:'Invincible',       rank:2},
+  {id:'b24',n:24,tree:'Swordsmanship', name:'Hardy',            rank:2},
+  {id:'b25',n:25,tree:'Swordsmanship', name:'Combat Acumen',    rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
+  {id:'b26',n:26,tree:'Swordsmanship', name:'Combat Acumen',    rank:2},
+  // ── ALCHEMY (Continued) ───────────────────────────
+  {id:'b27',n:27,tree:'Alchemy',    name:'Specialization: Oils'},
+  {id:'b28',n:28,tree:'Alchemy',    name:'Impregnation',        rank:1},
+  {id:'b29',n:29,tree:'Alchemy',    name:'Impregnation',        rank:2},
+  {id:'b30',n:30,tree:'Alchemy',    name:'Taster',              rank:1},
+  {id:'b31',n:31,tree:'Alchemy',    name:'Taster',              rank:2},
+  {id:'b32',n:32,tree:'Alchemy',    name:'Metathesis',          rank:1, mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
+  {id:'b33',n:33,tree:'Alchemy',    name:'Metathesis',          rank:2},
+  {id:'b34',n:34,tree:'Alchemy',    name:'Condensation',        mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
+  {id:'b35',n:35,tree:'Alchemy',    name:'Mutant',              mutable:true, note:'Take talent first — then apply a Power Mutagen to this slot'},
 ];
 
-// Visual groups for the build tab (in play order)
 const BUILD_GROUPS=[
-  {label:'Training',             treeKey:'Training',     range:[1,6],  skills:BUILD_SKILLS.filter(s=>s.tree==='Training')},
-  {label:'Alchemy (pts 8\u201313)',   treeKey:'Alchemy',      range:[7,12], skills:BUILD_SKILLS.filter(s=>s.tree==='Alchemy'&&s.n<=13)},
-  {label:'Swordsmanship',        treeKey:'Swordsmanship',range:[13,25],skills:BUILD_SKILLS.filter(s=>s.tree==='Swordsmanship')},
-  {label:'Alchemy (pts 27\u201335)',  treeKey:'Alchemy',      range:[26,34],skills:BUILD_SKILLS.filter(s=>s.tree==='Alchemy'&&s.n>=27)},
+  {label:'Training',            treeKey:'Training',      skills:BUILD_SKILLS.filter(s=>s.tree==='Training')},
+  {label:'Alchemy',             treeKey:'Alchemy',       skills:BUILD_SKILLS.filter(s=>s.tree==='Alchemy'&&s.n<=13)},
+  {label:'Swordsmanship',       treeKey:'Swordsmanship', skills:BUILD_SKILLS.filter(s=>s.tree==='Swordsmanship')},
+  {label:'Alchemy (Continued)', treeKey:'Alchemy',       skills:BUILD_SKILLS.filter(s=>s.tree==='Alchemy'&&s.n>=27)},
 ];
 
 const BUILD_EQUIPMENT=[
@@ -302,124 +297,6 @@ const PASSIVES={
 const BOOKS=['About Dragons (from Newboy if he was saved)','Beings of the Element of Earth','Blood of Elves','Bruxae — Eulogists of Death',"Dearhenng's Memoirs",'Do it Yourself','Drowners: A Textbook for Initiates of the Order of the Flaming Rose','From the Annals of Mahakaman History','Gargoyles, Gutters, Splutters — Maintenance and Repair','Harpies — Daughters of the Gale','How to Kill a Bullvore','Legend of the Blasphemer (Dark difficulty only)','Legend of the Kinslayer (Dark difficulty only)','Legend of the Oathbreaker (Dark difficulty only)','Lure of the Temptress','Magic and Power','Marshall Milan Raupenneck','Monstrum, or a Portrayal of Witchers','More than Aretuza','Nekkers in the Mist','Of Trolls and Trolling','Rites of Midaeëte','Rites of Midinværne','Slaves of the Curse','The Alchemical Wedding','The Arachas — A Study','The Art of Magic','The Conclave of Mages','The Conjunction of the Spheres','The Dun Banner','The Duties and Goals of the Lodge','The Feudal Society and its Enemies','The Good Book','The Grand Triple','The Great Book of Herbs','The History of the Council of Mages','The Horrors of War: Rotfiends','The Immortelle or the Dwarven Herb','The Kayran — A Monograph','The Legendary Accursed','The Life and Death of the White Rose','The Nilfgaardian Provinces','The Pontar Valley','The Realms of the Nordlings','The Rose and the Flame','The Rudiments of Pathomorphology','The Temerian Royal Dynasty','The Temerian Special Forces','The Thanedd Coup','The Valley of the Flowers','The Viziman Uprising','The Wars For Upper Aedirn','The White Flame','Three Years Among The Endregas'];
 const FORMULAS=['Arachnid Oil','Blade Oil','Brock','Brown Oil','Cat','Dancing Star',"Devil's Puffball","Dragon's Dream","Falka's Blood",'Flare','Gadwall','Golden Oriole','Grapeshot',"Hanged Man's Venom",'Healing Brew (tutorial)','Insectoid Oil','Lapwing','Maribor Forest','Mongoose','Necrophage Oil',"Petri's Philter",'Red Haze','Rook','Samum','Specter Oil',"Stammleford's Philter",'Stenchbulb','Swallow','Tawny Owl','Thunderbolt','Tiara','Virga','Whirl',"White Raffard's Decoction",'Wolf','Zerrikanian Sun'];
 const DIAGRAMS=['Amethyst armor enhancement','Amethyst dust','Anathema (Dark)','Arachas trap','Arbitrator','Armor of Tir na Lia','Armor of Ys','Armor of Ysgith','Barber-surgeon','Basilisk','Basilisk boots',"Beann'shie",'Biter','Black Unicorn (Dark)','Blame',"Blasphemer's armor (Dark)","Blasphemer's boots (Dark)","Blasphemer's gauntlets (Dark)","Blasphemer's trousers (Dark)",'Blessed armor','Blue meteorite ore','Blue meteorite silver sword','Bride','Caerme','Ceremonial sword of Deithwen','Clawer','Conflagration','Craag Ross armor','Dearg Ruadhri','Devil','Diamond armor reinforcements','Diamond dust','Dragon trap','Draug armor',"Draug's Confession","Duelist's gauntlets",'Earth rune','Eclipse','Elder Blood boots','Elder Blood gauntlets','Elder Blood trousers','Elemental stone','Endrega hide armor reinforcements','Essence of water','Fire rune','Gnomish pattern breeches','The Good Shepherd','Groom','Halfling pattern trousers','Hardened leather','Hardened leather boots','Harpy trap','Head-taker','Heavy elven armor','Heavy leather jacket','Heavy leather trousers',"Hunter's armor",'Ichaer Aardanna','Jagged blade','Judge',"Kaedweni falconer's gauntlets",'Kayran carapace armor reinforcements','Kayran skin armor','Kayran trap',"Kinslayer's armor (Dark)","Kinslayer's boots (Dark)","Kinslayer's gauntlets (Dark)","Kinslayer's trousers (Dark)",'Leather','Leather jacket','Light leather armor','Lionhead Spider boots','Long leather gauntlets','Long, robust gauntlets','Long studded leather gauntlets','Magic wrap','Mahakaman sihil','Marag Bator','Mongoose gauntlets','Moon rune','Mourner (Dark)',"Myrmidon's gauntlets",'Negotiator',"Nilfgaardian falconer's gauntlets",'Nilfgaardian harpy',"Oathbreaker's armor (Dark)","Oathbreaker's boots (Dark)","Oathbreaker's gauntlets (Dark)","Oathbreaker's trousers (Dark)",'Oil','Rage','Red meteorite ore','Red meteorite silver sword','Reformer','Reinforced leather boots','Robust blue meteorite silver sword','Robust cloth','Robust cutlass','Robust Kaedweni sword','Robust leather jacket','Robust red meteorite silver sword','Robust yellow meteorite sword','Seven-furlong boots','Shadow','Short sword','Studded leather','Studded leather trousers','Sun rune','Superb blue meteorite silver sword','Superb leather trousers','Superb red meteorite silver sword','Superb sword of Dol Blathanna','Superb yellow meteorite silver sword','Sword of Caingorn','Sword of Yspaden','Talgar winter',"Temerian falconer's gauntlets",'Temerian steel sword','Tir Tochair armor','Ultimatum (Dark)','Vanguard trousers','Virgin (Dark)','Viroledan longsword','Vran armor','Weeper (Dark)','Well-balanced dagger','Wight','Wild Hunt armor','Wild Hunt gauntlets','Wild Hunt riding boots','Wild Hunt trousers',"Witcher's robust silver sword","Witcher's silver sword","Witcher's superb silver sword",'Yellow meteorite ore','Yellow meteorite silver sword','Ysgith rune','Zerrikanian saberra','Zerrikanterment'];
-
-const ENDINGS=[
-  {id:'e1',name:'Ending 1 — Letho escapes, Roche path'},
-  {id:'e2',name:'Ending 2 — Letho escapes, Iorveth path'},
-  {id:'e3',name:'Ending 3 — Letho dies, Roche path'},
-  {id:'e4',name:'Ending 4 — Letho dies, Iorveth path'},
-  {id:'e5',name:'Ending 5 — Roche saves Anais, Roche path'},
-  {id:'e6',name:'Ending 6 — Roche saves Philippa, Iorveth path'},
-  {id:'e7',name:'Ending 7 — Geralt sides with S\u00edle, Iorveth path'},
-  {id:'e8',name:'Ending 8 — Henselt freed, Roche path'},
-];
-
-const STEAM_ACH=[
-  // ── STORY (14) ─────────────────────────────────────────────────────────────
-  {id:'s1', cat:'story',missable:false,name:'The Fugitive',
-   how:'Complete the Prologue.'},
-  {id:'s2', cat:'story',missable:false,name:'Oh My God! You Killed The Kayran! You Bastards!',
-   how:'Kill the Kayran in Chapter I.'},
-  {id:'s3', cat:'story',missable:false,name:'To Aedirn!',
-   how:'Complete Chapter I.'},
-  {id:'s4', cat:'story',missable:false,name:'Fat Man',
-   how:'Kill the Draug (Roche path, Chapter II).'},
-  {id:'s5', cat:'story',missable:false,name:'Alea Lacta Est',
-   how:'Complete Chapter II.'},
-  {id:'s6', cat:'story',missable:true, name:'Sensitive Guy',
-   how:'Save Síle de Tansarville from dying in the unstable portal (Chapter III). Mutually exclusive with Witch Hunter.'},
-  {id:'s7', cat:'story',missable:true, name:'Witch Hunter',
-   how:'Leave Síle to die in the unstable portal (Chapter III). Mutually exclusive with Sensitive Guy.'},
-  {id:'s8', cat:'story',missable:true, name:'Being Witcher George',
-   how:'Kill the dragon in Chapter III.'},
-  {id:'s9', cat:'story',missable:true, name:'Dragonheart',
-   how:'Spare or save Saskia (Iorveth path, Chapter III).'},
-  {id:'s10',cat:'story',missable:false,name:'Once Ain\'t Enough',
-   how:'Reach the Epilogue.'},
-  {id:'s11',cat:'story',missable:true, name:'Avenger',
-   how:'Finish the game by killing Letho. Mutually exclusive with Old Friends.'},
-  {id:'s12',cat:'story',missable:true, name:'Old Friends',
-   how:'Finish the game by sparing Letho. Mutually exclusive with Avenger.'},
-  {id:'s13',cat:'story',missable:false,name:'To Be Continued…',
-   how:'Complete the game on any difficulty.'},
-  {id:'s14',cat:'story',missable:false,name:'Madman',
-   how:'Complete the game on Insane Difficulty (one life — if Geralt dies, the save is deleted).'},
-  // ── MISSABLE (12) ──────────────────────────────────────────────────────────
-  {id:'m1', cat:'missable',missable:true, name:'Eagle Eye',
-   how:'Hit Count Etcheverry with the Ballista during the Prologue. Point his head in the crosshair centre-left.'},
-  {id:'m2', cat:'missable',missable:true, name:'Man of the Shadows',
-   how:"Sneak through Loredo's garden without being detected AND collect the Kayran Trap component (Chapter I)."},
-  {id:'m3', cat:'missable',missable:true, name:'Artful Dodger',
-   how:"Cut off one of the Kayran's tentacles using the Kayran Trap (Chapter I) — place all 3 traps correctly."},
-  {id:'m4', cat:'missable',missable:true, name:'Trollslayer',
-   how:'Kill ALL trolls in the game. Mutually exclusive with Friend of Trolls.'},
-  {id:'m5', cat:'missable',missable:true, name:'Friend of Trolls',
-   how:'Spare ALL trolls in the game (resolve Troll Trouble peacefully). Mutually exclusive with Trollslayer.'},
-  {id:'m6', cat:'missable',missable:true, name:'Tourist',
-   how:'Tour the Kaedweni military camp with Zyvik (Roche path, Chapter II). Follow Zyvik on his patrol.'},
-  {id:'m7', cat:'missable',missable:true, name:'Heartbreaker',
-   how:'Seduce Ves (Roche path, Chapter II) — choose the correct dialogue options when she is unwell.'},
-  {id:'m8', cat:'missable',missable:true, name:'Necromancer',
-   how:"Relive ALL of Auckes's memories inside Dethmold's Vision without skipping any (Roche path, Chapter II)."},
-  {id:'m9', cat:'missable',missable:true, name:'Reasons of State',
-   how:'Prevent Roche from killing Henselt (Roche path, Chapter II) — choose to spare Henselt.'},
-  {id:'m10',cat:'missable',missable:true, name:'Kingmaker',
-   how:'Help Roche rescue Anais from the Kaedweni camp (Roche path, Chapter III).'},
-  {id:'m11',cat:'missable',missable:true, name:'Spellbreaker',
-   how:'Complete the Iorveth path storyline in Chapter III — help free Philippa Eilhart.'},
-  {id:'m12',cat:'missable',missable:true, name:'Threesome',
-   how:'Participate in a threesome with the Succubus and Margot in Vergen (Iorveth path, Chapter II).'},
-  // ── COMBAT / CHARACTER (16) ────────────────────────────────────────────────
-  {id:'c1', cat:'combat',missable:false,name:'Perfectionist',
-   how:'Kill 10 enemies in a row without losing any Vitality (health). Best attempted on easy enemies.'},
-  {id:'c2', cat:'combat',missable:false,name:'Last Man Standing',
-   how:'Win a fight against multiple opponents in the arena / gladiator pit.'},
-  {id:'c3', cat:'combat',missable:false,name:'Gladiator',
-   how:'Win all one-on-one fist fight tournaments across all chapters.'},
-  {id:'c4', cat:'combat',missable:false,name:'Butcher of Blaviken',
-   how:'Kill 500 enemies total across the entire playthrough.'},
-  {id:'c5', cat:'combat',missable:false,name:'Ricochet',
-   how:"Deflect an enemy's projectile back at them using the Quen Sign shield."},
-  {id:'c6', cat:'combat',missable:false,name:'Torn Asunder!',
-   how:'Kill more than one opponent with a single exploding bomb.'},
-  {id:'c7', cat:'combat',missable:false,name:'Gambler',
-   how:'Win an arm wrestling match, a dice poker game AND a fist fight in the same playthrough.'},
-  {id:'c8', cat:'combat',missable:false,name:'Poker!',
-   how:'Get a five-of-a-kind hand in dice poker. Easiest against the Prologue camp soldier — he never resigns.'},
-  {id:'c9', cat:'combat',missable:false,name:'Intimidator',
-   how:'Successfully use an intimidation dialogue option to threaten someone into compliance.'},
-  {id:'c10',cat:'combat',missable:false,name:'Journeyman',
-   how:'Hire a craftsman (smith or armourer) to create a weapon or piece of armour for you.'},
-  {id:'c11',cat:'combat',missable:false,name:'Taster',
-   how:'Drink any potion.'},
-  {id:'c12',cat:'combat',missable:false,name:'Great Potion!',
-   how:'Brew the Swallow potion (the regeneration potion) in the alchemy menu.'},
-  {id:'c13',cat:'combat',missable:false,name:'Swordmaster',
-   how:'Max out the Swordsmanship skill tree completely.'},
-  {id:'c14',cat:'combat',missable:false,name:'Master of Magic',
-   how:'Max out all five Sign skills.'},
-  {id:'c15',cat:'combat',missable:false,name:'Mutant!',
-   how:'Place a mutagen in a character development slot.'},
-  {id:'c16',cat:'combat',missable:false,name:'Focus',
-   how:'Achieve a kill streak of 10 using only fast attacks (no pausing between kills).'},
-  // ── COLLECTIBLES (8) ───────────────────────────────────────────────────────
-  {id:'l1', cat:'collect',missable:true, name:'Librarian',
-   how:'Collect all books available in the game — buy from every merchant and loot thoroughly. Dark Mode books also count.'},
-  {id:'l2', cat:'collect',missable:true, name:'Master Alchemist',
-   how:'Learn all alchemy formulas (potions, bombs, oils) — purchase from alchemists and find in the world.'},
-  {id:'l3', cat:'collect',missable:true, name:'Guru',
-   how:'Collect all crafting diagrams in a single playthrough (some are path-exclusive, loot everything).'},
-  {id:'l4', cat:'collect',missable:true, name:'Pest Control',
-   how:'Complete ALL monster nest destruction quests: Nekker Contract (Ch.I), Endrega Contract (Ch.I), Rotfiend Contract (Ch.II Roche), Harpy Contract (Ch.II Iorveth), and the Gargoyle Contract (Ch.III).'},
-  {id:'l5', cat:'collect',missable:false,name:'Tried-and-True',
-   how:'Use every type of weapon available in the game (sword, bomb, trap, crossbow/bolt) at least once.'},
-  {id:'l6', cat:'collect',missable:false,name:'Miser',
-   how:'Accumulate 30,000 Orens at one time. Sell loot and play dice poker to build up gold.'},
-  {id:'l7', cat:'collect',missable:false,name:'Summer Solstice',
-   how:'Hidden achievement — complete the game on the Iorveth path. Awarded at the end of a full Iorveth playthrough.'},
-  {id:'l8', cat:'collect',missable:false,name:'Winter Solstice',
-   how:'Hidden achievement — complete the game on the Roche path. Awarded at the end of a full Roche playthrough.'},
-];
 
 /* ═══ UTILS ═══ */
 function vis(item,dark){return !(item.darkOnly&&!dark);}
@@ -509,7 +386,7 @@ function SkipToggle({skipped,onToggle,label}){
 }
 
 /* ═══ QUEST ITEM ═══ */
-function QItem({item,checked,onToggle,darkDiff,showModal}){
+function QItem({item,checked,onToggle,darkDiff}){
   if(!vis(item,darkDiff))return null;
   const done=!!checked[item.id];
   return(
@@ -528,27 +405,33 @@ function QItem({item,checked,onToggle,darkDiff,showModal}){
         </div>
         {item.note&&!done&&<div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic',marginTop:'1px'}}>{item.note}</div>}
       </div>
-      {item.ach&&(
-        <div onClick={()=>showModal&&showModal(item)}
-          style={{flexShrink:0,cursor:'pointer',display:'flex',alignItems:'center',gap:'4px',
-            padding:'1px 7px',border:`1px solid #3a3010`,borderRadius:'10px',background:'#12100a',
-            marginTop:'1px',transition:'all 0.15s'}}
-          onMouseEnter={e=>e.currentTarget.style.borderColor=C.amber}
-          onMouseLeave={e=>e.currentTarget.style.borderColor='#3a3010'}>
-          <span style={{fontSize:'11px'}}>⭐</span>
-          <span style={{fontFamily:FD,fontSize:'9px',letterSpacing:'1px',color:C.amber,textTransform:'uppercase'}}>Ach</span>
-        </div>
-      )}
     </div>
   );
 }
 
-/* ═══ SECTION ═══ */
-function Section({title,items,checked,onToggle,darkDiff,showModal,defaultOpen=true}){
+/* ═══ SECTION (With sorting logic) ═══ */
+function Section({title,items,checked,onToggle,darkDiff,defaultOpen=true,sortCompleted=false}){
   const[open,setOpen]=useState(defaultOpen);
   const v=visList(items,darkDiff);
   const d=v.filter(i=>checked[i.id]).length;
   const done=d===v.length&&v.length>0;
+
+  // Sorting logic: if checked, drop to bottom. Inside the done group, newest completion is on top.
+  const displayItems = !sortCompleted ? v : v.map((item, idx) => ({item, idx})).sort((a, b) => {
+    const valA = checked[a.item.id];
+    const valB = checked[b.item.id];
+    const isDoneA = !!valA;
+    const isDoneB = !!valB;
+
+    if (isDoneA !== isDoneB) return isDoneA ? 1 : -1;
+    if (isDoneA && isDoneB) {
+      const timeA = typeof valA === 'number' ? valA : 0;
+      const timeB = typeof valB === 'number' ? valB : 0;
+      if (timeB !== timeA) return timeB - timeA; 
+    }
+    return a.idx - b.idx;
+  }).map(o => o.item);
+
   return(
     <div style={{marginBottom:'6px'}}>
       <div onClick={()=>setOpen(o=>!o)}
@@ -562,25 +445,9 @@ function Section({title,items,checked,onToggle,darkDiff,showModal,defaultOpen=tr
       </div>
       {open&&(
         <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderTop:'none',borderRadius:'0 0 4px 4px',paddingTop:'4px',paddingBottom:'4px'}}>
-          {v.map(item=><QItem key={item.id} item={item} checked={checked} onToggle={onToggle} darkDiff={darkDiff} showModal={showModal}/>)}
+          {displayItems.map(item=><QItem key={item.id} item={item} checked={checked} onToggle={onToggle} darkDiff={darkDiff}/>)}
         </div>
       )}
-    </div>
-  );
-}
-
-/* ═══ ACH MODAL ═══ */
-function AchModal({item,onClose}){
-  if(!item||!item.ach)return null;
-  return(
-    <div onClick={onClose} style={{position:'fixed',inset:0,background:'#000000aa',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}}>
-      <div onClick={e=>e.stopPropagation()}
-        style={{background:C.bgCard,border:`1px solid ${C.amber}66`,borderRadius:'8px',padding:'24px',maxWidth:'400px',width:'90%',boxShadow:`0 8px 32px ${C.bgDk}`}}>
-        <div style={{fontFamily:FD,fontSize:'11px',color:C.amber,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'12px'}}>⭐ Achievement</div>
-        <div style={{fontFamily:FD,fontSize:'16px',color:C.amberLt,marginBottom:'10px'}}>{item.ach.label}</div>
-        <div style={{fontFamily:FB,fontSize:'14px',color:C.parch,lineHeight:'1.5'}}>{item.ach.hint}</div>
-        <div onClick={onClose} style={{marginTop:'18px',fontFamily:FD,fontSize:'10px',letterSpacing:'2px',color:C.parchDm,textTransform:'uppercase',cursor:'pointer',textAlign:'right'}}>Close ✕</div>
-      </div>
     </div>
   );
 }
@@ -638,7 +505,6 @@ function Overview({checked,path,darkDiff,skipped,onPathChange,onDarkChange,onRes
     {label:'Books',items:bk,sk:skipped.books},
     {label:'Formulas',items:fo,sk:skipped.formulas},
     {label:'Diagrams',items:dg,sk:skipped.diagrams},
-    {label:'Endings',items:ENDINGS,sk:false},
   ];
   let totalDone=0,totalCount=0;
   sections.filter(s=>!s.sk).forEach(s=>{
@@ -673,7 +539,7 @@ function Overview({checked,path,darkDiff,skipped,onPathChange,onDarkChange,onRes
               style={{fontFamily:FD,fontSize:'10px',padding:'4px 12px',cursor:'pointer',letterSpacing:'1px',
                 border:`1px solid ${darkDiff?C.redLt:C.border}`,background:darkDiff?'#2a0808':'transparent',
                 color:darkDiff?C.redLt:C.parchDm,borderRadius:'3px',transition:'all 0.15s',textTransform:'uppercase'}}>
-              {darkDiff?'☠ Dark Mode ON':'☠ Dark Mode'}
+              {darkDiff?'\u2620 Dark Mode ON':'\u2620 Dark Mode'}
             </button>
           </div>
         </div>
@@ -706,13 +572,13 @@ function Overview({checked,path,darkDiff,skipped,onPathChange,onDarkChange,onRes
 }
 
 /* ═══ QUEST TAB ═══ */
-function QuestTab({data,checked,onToggle,darkDiff,showBonus,showModal}){
+function QuestTab({data,checked,onToggle,darkDiff,showBonus}){
   return(
     <div>
-      <Section title="Main Quests" items={data.main} checked={checked} onToggle={onToggle} darkDiff={darkDiff} showModal={showModal}/>
-      <Section title="Side Quests" items={data.side} checked={checked} onToggle={onToggle} darkDiff={darkDiff} showModal={showModal}/>
+      <Section title="Main Quests" items={data.main} checked={checked} onToggle={onToggle} darkDiff={darkDiff} sortCompleted={true}/>
+      <Section title="Side Quests" items={data.side} checked={checked} onToggle={onToggle} darkDiff={darkDiff} sortCompleted={true}/>
       {showBonus&&data.bonus?.length>0&&(
-        <Section title="Bonus" items={data.bonus} checked={checked} onToggle={onToggle} darkDiff={darkDiff} showModal={showModal} defaultOpen={false}/>
+        <Section title="Bonus" items={data.bonus} checked={checked} onToggle={onToggle} darkDiff={darkDiff} sortCompleted={true} defaultOpen={false}/>
       )}
     </div>
   );
@@ -720,7 +586,6 @@ function QuestTab({data,checked,onToggle,darkDiff,showBonus,showModal}){
 
 /* ═══ BUILD ITEM ═══ */
 function BuildItem({item,checked,onToggle}){
-  const ts=treeStyle(item.tree);
   const talentDone=!!checked[item.id];
   const mutagenDone=!!checked[item.id+'_m'];
   const fullyDone=item.mutable?(talentDone&&mutagenDone):talentDone;
@@ -729,8 +594,6 @@ function BuildItem({item,checked,onToggle}){
   if(item.skip){
     return(
       <div style={{display:'flex',alignItems:'center',gap:'10px',padding:'5px 10px',opacity:0.4}}>
-        <span style={{fontFamily:FD,fontSize:'10px',color:C.parchDm,background:C.bgHdr,border:`1px solid ${C.border}`,borderRadius:'3px',padding:'1px 6px',minWidth:'28px',textAlign:'center'}}>#{item.n}</span>
-        <span style={{fontFamily:FD,fontSize:'10px',padding:'1px 7px',border:`1px solid ${ts.bd}`,borderRadius:'3px',color:ts.color,background:ts.bg,textTransform:'uppercase',letterSpacing:'1px'}}>{item.tree}</span>
         <span style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic'}}>{displayName} — intentionally skipped</span>
       </div>
     );
@@ -744,11 +607,6 @@ function BuildItem({item,checked,onToggle}){
       onMouseEnter={e=>{if(!fullyDone)e.currentTarget.style.background=C.bgHdr;}}
       onMouseLeave={e=>{e.currentTarget.style.background=fullyDone?C.doneBg:talentDone&&item.mutable?'#121a12':'transparent';}}>
       <div style={{display:'flex',alignItems:'flex-start',gap:'8px'}}>
-        {/* point number + tree badge */}
-        <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'3px',flexShrink:0,paddingTop:'2px'}}>
-          <span style={{fontFamily:FD,fontSize:'10px',color:C.parchDm,background:C.bgHdr,border:`1px solid ${C.border}`,borderRadius:'3px',padding:'1px 5px',minWidth:'28px',textAlign:'center',lineHeight:'1.4'}}>#{item.n}</span>
-          <span style={{fontFamily:FD,fontSize:'7px',padding:'1px 5px',border:`1px solid ${ts.bd}`,borderRadius:'3px',color:ts.color,background:ts.bg,textTransform:'uppercase',letterSpacing:'0.5px',whiteSpace:'nowrap'}}>{item.tree==='Swordsmanship'?'Sword':item.tree}</span>
-        </div>
         {/* talent checkbox (and mutagen for mutable) */}
         {item.mutable?(
           <div style={{display:'flex',gap:'6px',flexShrink:0,paddingTop:'2px'}}>
@@ -843,12 +701,6 @@ function BuildTab({checked,onToggle}){
           <strong style={{color:C.greenLt}}>Mutable slots</strong> show two checkboxes. Tick <strong style={{color:C.gold}}>Talent</strong> when you buy it, then tick <strong style={{color:C.greenLt}}>Mutagen</strong> after you apply a <strong style={{color:C.greenLt}}>Power Mutagen</strong> to that slot in the character menu.
         </span>
       </div>
-      {/* color legend */}
-      <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap'}}>
-        {[['Training',C.tTrain,C.tTrainBd],['Alchemy',C.tAlch,C.tAlchBd],['Swordsmanship',C.tSword,C.tSwordBd]].map(([t,c,b])=>(
-          <div key={t} style={{fontFamily:FD,fontSize:'10px',padding:'3px 10px',border:`1px solid ${b}`,borderRadius:'3px',color:c,background:'transparent',letterSpacing:'1px'}}>{t}</div>
-        ))}
-      </div>
       {BUILD_GROUPS.map(g=><BuildGroup key={g.label} group={g} checked={checked} onToggle={onToggle}/>)}
       {/* equipment */}
       <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:'6px',overflow:'hidden',marginBottom:'10px'}}>
@@ -892,10 +744,10 @@ function PassivesTab({path,checked,onToggle,skipped,onSkipToggle}){
         <div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic',marginBottom:'12px',padding:'8px 12px',background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:'4px'}}>
           ★ marks optional passives. {!path&&<span style={{color:C.redLt}}>Set your path in Overview for Chapter II passives.</span>}
         </div>
-        <Section title="Prologue" items={PASSIVES.prologue} checked={checked} onToggle={onToggle} darkDiff={true}/>
-        <Section title="Chapter I" items={PASSIVES.chapter1} checked={checked} onToggle={onToggle} darkDiff={true}/>
-        <Section title={c2label} items={c2p} checked={checked} onToggle={onToggle} darkDiff={true}/>
-        <Section title="Chapter III" items={PASSIVES.chapter3} checked={checked} onToggle={onToggle} darkDiff={true}/>
+        <Section title="Prologue" items={PASSIVES.prologue} checked={checked} onToggle={onToggle} darkDiff={true} sortCompleted={true}/>
+        <Section title="Chapter I" items={PASSIVES.chapter1} checked={checked} onToggle={onToggle} darkDiff={true} sortCompleted={true}/>
+        <Section title={c2label} items={c2p} checked={checked} onToggle={onToggle} darkDiff={true} sortCompleted={true}/>
+        <Section title="Chapter III" items={PASSIVES.chapter3} checked={checked} onToggle={onToggle} darkDiff={true} sortCompleted={true}/>
       </>}
     </div>
   );
@@ -939,83 +791,12 @@ function CollectTab({type,items,checked,onToggle,skipped,onSkipToggle,label,warn
   );
 }
 
-/* ═══ ENDINGS ═══ */
-function EndingsTab({checked,onToggle}){
-  const[spoiler,setSpoiler]=useState(false);
-  const d=ENDINGS.filter(i=>checked[i.id]).length;
-  return(
-    <div>
-      <div style={{background:C.bgHdr,border:`1px solid ${C.border}`,borderRadius:'5px',padding:'10px 14px',marginBottom:'14px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontFamily:FD,fontSize:'11px',color:C.gold,textTransform:'uppercase',letterSpacing:'1px'}}>Endings Seen</span>
-        <Bar done={d} total={ENDINGS.length}/>
-      </div>
-      {!spoiler?(
-        <div onClick={()=>setSpoiler(true)}
-          style={{background:'#0a0505',border:`1px solid ${C.red}44`,borderRadius:'8px',padding:'32px',textAlign:'center',cursor:'pointer',transition:'all 0.2s'}}
-          onMouseEnter={e=>e.currentTarget.style.borderColor=C.redLt+'88'}
-          onMouseLeave={e=>e.currentTarget.style.borderColor=C.red+'44'}>
-          <div style={{fontSize:'28px',marginBottom:'10px'}}>⚔</div>
-          <div style={{fontFamily:FD,fontSize:'14px',color:C.redLt,letterSpacing:'2px',textTransform:'uppercase'}}>Spoiler Warning</div>
-          <div style={{fontFamily:FB,fontSize:'13px',color:C.parchDm,marginTop:'6px'}}>Click to reveal</div>
-        </div>
-      ):(
-        <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:'5px',padding:'4px 0'}}>
-          {ENDINGS.map(item=><QItem key={item.id} item={item} checked={checked} onToggle={onToggle} darkDiff={true}/>)}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ═══ ACHIEVEMENTS TAB ═══ */
-function AchievementsTab({checked,onToggle}){
-  const catColors={story:C.gold,missable:C.redLt,combat:C.silv,collect:C.amber};
-  const catLabels={story:'📖 Story',missable:'⚠ Missable',combat:'⚔ Combat & Character',collect:'📦 Collectibles & Hidden'};
-  const achDone=STEAM_ACH.filter(a=>checked[`ach_${a.id}`]).length;
-  return(
-    <div>
-      <div style={{background:C.bgHdr,border:`1px solid ${C.border}`,borderRadius:'5px',padding:'10px 14px',marginBottom:'14px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontFamily:FD,fontSize:'11px',color:C.gold,textTransform:'uppercase',letterSpacing:'1px'}}>Steam Achievements</span>
-        <Bar done={achDone} total={STEAM_ACH.length}/>
-      </div>
-      {['story','missable','combat','collect'].map(cat=>{
-        const items=STEAM_ACH.filter(a=>a.cat===cat);
-        return(
-          <div key={cat} style={{marginBottom:'12px'}}>
-            <Divider label={catLabels[cat]}/>
-            {items.map(ach=>{
-              const id=`ach_${ach.id}`,done=!!checked[id];
-              return(
-                <div key={id} onClick={()=>onToggle(id)}
-                  style={{display:'flex',gap:'10px',padding:'9px 12px',cursor:'pointer',
-                    background:done?C.doneBg:C.bgCard,border:`1px solid ${done?catColors[cat]+'33':C.border}`,
-                    borderRadius:'4px',marginBottom:'4px',transition:'all 0.15s',alignItems:'flex-start'}}
-                  onMouseEnter={e=>{if(!done)e.currentTarget.style.background=C.bgHdr;}}
-                  onMouseLeave={e=>{e.currentTarget.style.background=done?C.doneBg:C.bgCard;}}>
-                  <Checkbox checked={done} onChange={()=>onToggle(id)} color={catColors[cat]}/>
-                  <div style={{flex:1}}>
-                    <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                      <span style={{fontFamily:FD,fontSize:'12px',color:done?C.doneTx:catColors[cat],textDecoration:done?'line-through':'none'}}>{ach.name}</span>
-                      {ach.missable&&!done&&<span style={{fontFamily:FD,fontSize:'8px',color:C.redLt,border:`1px solid ${C.red}66`,borderRadius:'10px',padding:'1px 5px',textTransform:'uppercase'}}>missable</span>}
-                    </div>
-                    {!done&&<div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,marginTop:'2px',fontStyle:'italic',lineHeight:'1.4'}}>{ach.how}</div>}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 /* ═══ MAIN APP ═══ */
 const TABS=[
   {id:'overview',label:'⚔ Overview'},{id:'prologue',label:'Prologue'},{id:'ch1',label:'Chapter I'},
   {id:'ch2',label:'Chapter II'},{id:'ch3',label:'Chapter III'},{id:'build',label:'Build'},
   {id:'passives',label:'Passives'},{id:'books',label:'Books'},{id:'formulas',label:'Formulas'},
-  {id:'diagrams',label:'Diagrams'},{id:'endings',label:'Endings'},{id:'achievements',label:'⭐ Achievements'},
+  {id:'diagrams',label:'Diagrams'}
 ];
 
 function App(){
@@ -1025,7 +806,6 @@ function App(){
   const[darkDiff,setDarkDiff]=useState(false);
   const[checked,setChecked]=useState({});
   const[skipped,setSkipped]=useState({books:false,formulas:false,diagrams:false,passives:false});
-  const[modal,setModal]=useState(null);
 
   useEffect(()=>{
     async function load(){
@@ -1043,13 +823,14 @@ function App(){
     window.storage.set('w2v5',JSON.stringify({path,darkDiff,checked,skipped})).catch(()=>{});
   },[path,darkDiff,checked,skipped,loaded]);
 
-  const toggle=useCallback((id,item)=>{
+  // Track timestamps for intelligent sorting
+  const toggle=useCallback((id)=>{
     setChecked(prev=>{
-      const next={...prev,[id]:!prev[id]};
-      // auto-mark linked achievement when quest is ticked ON
-      if(!prev[id]&&item&&item.achId){
-        const achKey=`ach_${item.achId}`;
-        if(!next[achKey]) next[achKey]=true;
+      const next={...prev};
+      if(next[id]){
+        delete next[id];
+      } else {
+        next[id] = Date.now();
       }
       return next;
     });
@@ -1102,26 +883,23 @@ function App(){
             <h2 style={{fontFamily:FD,fontSize:'17px',fontWeight:'600',color:C.gold,letterSpacing:'3px',textTransform:'uppercase',margin:0}}>
               {tab==='prologue'?'Prologue':tab==='ch1'?'Chapter I — Flotsam':
                tab==='ch2'?c2title:tab==='ch3'?c3title:
-               tab==='build'?'Build Planner (34 pts)':tab==='passives'?'Passive Abilities':
+               tab==='build'?'Build Planner':tab==='passives'?'Passive Abilities':
                tab==='books'?`Books (${BOOKS.length})`:tab==='formulas'?`Formulas (${FORMULAS.length})`:
-               tab==='diagrams'?`Diagrams (${DIAGRAMS.length})`:tab==='endings'?'All Endings':'Steam Achievements'}
+               tab==='diagrams'?`Diagrams (${DIAGRAMS.length})`:''}
             </h2>
           </div>
         )}
         {tab==='overview'&&<Overview checked={checked} path={path} darkDiff={darkDiff} skipped={skipped} onPathChange={setPath} onDarkChange={setDarkDiff} onReset={handleReset}/>}
-        {tab==='prologue'&&<QuestTab data={PROLOGUE} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={false} showModal={setModal}/>}
-        {tab==='ch1'&&<QuestTab data={CHAPTER1} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={true} showModal={setModal}/>}
-        {tab==='ch2'&&(!path?<div style={{textAlign:'center',padding:'48px',fontFamily:FD,fontSize:'13px',color:C.parchDm}}>Set your path in Overview to see Chapter II quests.</div>:<QuestTab data={c2data} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={true} showModal={setModal}/>)}
-        {tab==='ch3'&&(!path?<div style={{textAlign:'center',padding:'48px',fontFamily:FD,fontSize:'13px',color:C.parchDm}}>Set your path in Overview to see Chapter III quests.</div>:<QuestTab data={c3data} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={true} showModal={setModal}/>)}
+        {tab==='prologue'&&<QuestTab data={PROLOGUE} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={false}/>}
+        {tab==='ch1'&&<QuestTab data={CHAPTER1} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={true}/>}
+        {tab==='ch2'&&(!path?<div style={{textAlign:'center',padding:'48px',fontFamily:FD,fontSize:'13px',color:C.parchDm}}>Set your path in Overview to see Chapter II quests.</div>:<QuestTab data={c2data} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={true}/>)}
+        {tab==='ch3'&&(!path?<div style={{textAlign:'center',padding:'48px',fontFamily:FD,fontSize:'13px',color:C.parchDm}}>Set your path in Overview to see Chapter III quests.</div>:<QuestTab data={c3data} checked={checked} onToggle={toggle} darkDiff={darkDiff} showBonus={true}/>)}
         {tab==='build'&&<BuildTab checked={checked} onToggle={toggle}/>}
         {tab==='passives'&&<PassivesTab path={path} checked={checked} onToggle={toggle} skipped={skipped.passives} onSkipToggle={()=>toggleSkip('passives')}/>}
         {tab==='books'&&<CollectTab type="bk" items={BOOKS} checked={checked} onToggle={toggle} skipped={skipped.books} onSkipToggle={()=>toggleSkip('books')} label="Books"/>}
         {tab==='formulas'&&<CollectTab type="fo" items={FORMULAS} checked={checked} onToggle={toggle} skipped={skipped.formulas} onSkipToggle={()=>toggleSkip('formulas')} label="Alchemy Formulas"/>}
         {tab==='diagrams'&&<CollectTab type="dg" items={DIAGRAMS} checked={checked} onToggle={toggle} skipped={skipped.diagrams} onSkipToggle={()=>toggleSkip('diagrams')} label="Crafting Diagrams" warning="Some diagrams drop randomly — 100% may not be possible in a single playthrough."/>}
-        {tab==='endings'&&<EndingsTab checked={checked} onToggle={toggle}/>}
-        {tab==='achievements'&&<AchievementsTab checked={checked} onToggle={toggle}/>}
       </div>
-      <AchModal item={modal} onClose={()=>setModal(null)}/>
       {!loaded&&<div style={{position:'fixed',inset:0,background:C.bgDk,display:'flex',alignItems:'center',justifyContent:'center',zIndex:9999}}><div style={{fontFamily:FD,fontSize:'13px',letterSpacing:'3px',color:C.gold,textTransform:'uppercase'}}>Loading...</div></div>}
     </div>
   );
