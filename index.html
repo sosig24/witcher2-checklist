@@ -358,7 +358,7 @@ function Checkbox({checked,onChange,color=C.gold,size=15}){
     <div onClick={onChange} style={{width:size,height:size,flexShrink:0,cursor:'pointer',
       border:`1.5px solid ${checked?color:C.goldDk}`,borderRadius:'2px',
       background:checked?color:'transparent',display:'flex',alignItems:'center',justifyContent:'center',
-      transition:'all 0.15s',boxShadow:checked?`0 0 5px ${color}55`:'none'}}>
+      transition:'background 0.15s, border-color 0.15s',boxShadow:checked?`0 0 5px ${color}55`:'none'}}>
       {checked&&<span style={{color:C.bgDk,fontSize:Math.floor(size*0.65)+'px',fontWeight:'700',lineHeight:1}}>✓</span>}
     </div>
   );
@@ -389,22 +389,30 @@ function SkipToggle({skipped,onToggle,label}){
 function QItem({item,checked,onToggle,darkDiff}){
   if(!vis(item,darkDiff))return null;
   const done=!!checked[item.id];
+  const linkedAchs=QUEST_ACHIEVEMENTS[item.id]||[];
   return(
-    <div style={{display:'flex',alignItems:'flex-start',gap:'8px',padding:'5px 10px',borderRadius:'3px',
-      background:done?C.doneBg:'transparent'}}
-      onMouseEnter={e=>{if(!done)e.currentTarget.style.background=C.bgHdr;}}
-      onMouseLeave={e=>{e.currentTarget.style.background=done?C.doneBg:'transparent';}}>
-      <div style={{marginTop:'2px',flexShrink:0}}>
-        <Checkbox checked={done} onChange={()=>onToggle(item.id,item)}/>
-      </div>
-      <div style={{flex:1,cursor:'pointer'}} onClick={()=>onToggle(item.id,item)}>
-        <div style={{fontFamily:FB,fontSize:'14px',color:done?C.doneTx:C.parch,
-          textDecoration:done?'line-through':'none',transition:'all 0.15s',lineHeight:'1.35'}}>
-          {item.name}
-          {item.darkOnly&&<span style={{marginLeft:'6px',fontSize:'10px',color:C.redLt,border:`1px solid ${C.redLt}44`,borderRadius:'2px',padding:'0 3px'}}>DARK</span>}
+    <div>
+      <div style={{display:'flex',alignItems:'flex-start',gap:'8px',padding:'5px 10px',borderRadius:'3px',
+        background:done?C.doneBg:'transparent'}}
+        onMouseEnter={e=>{if(!done)e.currentTarget.style.background=C.bgHdr;}}
+        onMouseLeave={e=>{e.currentTarget.style.background=done?C.doneBg:'transparent';}}>
+        <div style={{marginTop:'2px',flexShrink:0}}>
+          <Checkbox checked={done} onChange={()=>onToggle(item.id,item)}/>
         </div>
-        {item.note&&!done&&<div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic',marginTop:'1px'}}>{item.note}</div>}
+        <div style={{flex:1,cursor:'pointer'}} onClick={()=>onToggle(item.id,item)}>
+          <div style={{fontFamily:FB,fontSize:'14px',color:done?C.doneTx:C.parch,
+            textDecoration:done?'line-through':'none',transition:'all 0.15s',lineHeight:'1.35'}}>
+            {item.name}
+            {item.darkOnly&&<span style={{marginLeft:'6px',fontSize:'10px',color:C.redLt,border:`1px solid ${C.redLt}44`,borderRadius:'2px',padding:'0 3px'}}>DARK</span>}
+          </div>
+          {item.note&&!done&&<div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic',marginTop:'1px'}}>{item.note}</div>}
+        </div>
       </div>
+      {linkedAchs.length>0&&(
+        <div style={{paddingBottom:'2px'}}>
+          {linkedAchs.map(achId=><AchievementBadge key={achId} achId={achId} checked={checked} onToggle={onToggle}/>)}
+        </div>
+      )}
     </div>
   );
 }
@@ -505,10 +513,11 @@ function Overview({checked,path,darkDiff,skipped,onPathChange,onDarkChange,onRes
     {label:'Books',items:bk,sk:skipped.books},
     {label:'Formulas',items:fo,sk:skipped.formulas},
     {label:'Diagrams',items:dg,sk:skipped.diagrams},
+    {label:'Achievements',items:ACHIEVEMENTS,sk:false,isAch:true},
   ];
   let totalDone=0,totalCount=0;
   sections.filter(s=>!s.sk).forEach(s=>{
-    const v=s.items.filter(i=>!i.darkOnly||darkDiff);
+    const v=s.isAch?s.items:(s.items.filter(i=>!i.darkOnly||darkDiff));
     totalCount+=v.length;
     if(s.isBuild) totalDone+=cntBuildDone(v,checked);
     else totalDone+=v.filter(i=>checked[i.id]).length;
@@ -553,7 +562,7 @@ function Overview({checked,path,darkDiff,skipped,onPathChange,onDarkChange,onRes
       <Divider label="Section Progress"/>
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}>
         {sections.map(s=>{
-          const v=s.items.filter(i=>!i.darkOnly||darkDiff);
+          const v=s.isAch?s.items:(s.items.filter(i=>!i.darkOnly||darkDiff));
           const d=s.isBuild?cntBuildDone(v,checked):v.filter(i=>checked[i.id]).length;
           return <OCard key={s.label} label={s.label} done={d} total={v.length} skipped={s.sk}/>;
         })}
@@ -730,7 +739,7 @@ function BuildTab({checked,onToggle}){
 /* ═══ PASSIVES ═══ */
 function PassivesTab({path,checked,onToggle,skipped,onSkipToggle}){
   const c2p=path==='roche'?PASSIVES.roche:PASSIVES.iorveth;
-  const c2label=path==='roche'?'Chapter II — Roche':path==='iorveth'?'Chapter II — Iorveth':'Chapter II (set path)';
+  const c2label='Chapter II'+(path?'':' (set path)');
   const all=[...PASSIVES.prologue,...PASSIVES.chapter1,...c2p,...PASSIVES.chapter3];
   const d=all.filter(i=>checked[i.id]).length;
   return(
@@ -791,13 +800,219 @@ function CollectTab({type,items,checked,onToggle,skipped,onSkipToggle,label,warn
   );
 }
 
-/* ═══ MAIN APP ═══ */
+/* ═══ ACHIEVEMENTS DATA ═══ */
+const ACHIEVEMENTS=[
+  // MULTI-ACT
+  {id:'ach_miser',       cat:'Multi-Act', name:'Miser',              desc:'Have 10,000 Orens on you at one point. Save every Oren, sell gear, win dice/arm wrestle/fistfight with max stakes (quicksave before). Collect harpy feathers in Act II (9 Orens each). Best done on Iorveth path (more side quests, loan from Igor Vivaldi in Vergen, riches in "Secrets of Loc Muinne").'},
+  {id:'ach_butcher',     cat:'Multi-Act', name:'The Butcher of Blaviken', desc:'Kill 500 enemies total across the game. Usually unlocks naturally in Act II.'},
+  {id:'ach_journeyman',  cat:'Multi-Act', name:'Journeyman',          desc:'Reach Character Level 10. Unmissable — happens naturally in Act I.'},
+  {id:'ach_guru',        cat:'Multi-Act', name:'Guru',                desc:'Reach Character Level 35. Only possible by Act III. Do on Iorveth path first (more XP from main quests).'},
+  {id:'ach_trollslayer', cat:'Multi-Act', name:'Trollslayer',         desc:'Kill 3 trolls: one in Act I during "Troll Trouble" and a troll couple near Vergen in Act II. Mutually exclusive with Friend of Trolls — do this on your non-Insane run.'},
+  {id:'ach_friendtrolls',cat:'Multi-Act', name:'Friend of Trolls',    desc:'Don\'t kill any trolls. Resolve "Troll Trouble" by winning the troll wife\'s head from Sendler via dice poker (need Flotsam poker quest first). Do on your Insane run.'},
+  {id:'ach_pestcontrol', cat:'Multi-Act', name:'Pest Control',        desc:'Fulfill all monster nest contracts: Act I — Nekker and Endrega contracts. Act II — Harpy & Harpy Queen contracts (Queen dies in main quest; use harpy traps for nests, 4 in Old Quarry + 3 in Harpy Lair via "Hunting Magic"). Act III — Gargoyle contract (open chests in 3 rune rooms; activate runes in order hinted by poem: animal→S-rune, art→Harp-rune, time→Hourglass-rune, sky→Diamond-rune). Do on Iorveth non-Insane run.'},
+  // PROLOGUE
+  {id:'ach_poker',       cat:'Prologue',  name:'Poker!',             desc:'Get five-of-a-kind in dice poker. Play against the soldier in the Prologue camp — he never resigns. Purely luck-based; can take 50+ wins. Quicksave after every win.'},
+  {id:'ach_eagleeye',    cat:'Prologue',  name:'Eagle Eye',          desc:'During "By the King\'s Will" / "The Ballista", shoot Count Etcheverry. Position his head on the left side of the crosshairs in the middle. Geralt should say "One and a half degrees." Reload if you miss.', questId:'pm4'},
+  {id:'ach_perfectionist',cat:'Prologue', name:'Perfectionist',      desc:'10 enemies die without you being hit. At the start of the castle assault, stand still and let Foltest\'s men do the killing. Alternatively done with Whirl 2 vs Nekkers in Act II.'},
+  {id:'ach_gambler',     cat:'Prologue',  name:'Gambler',            desc:'Play dice poker, arm wrestle, and fistfight. In the Prologue: dice poker vs camp soldier, arm wrestle the soldier next to him, provoke the guards in the holding cell.'},
+  {id:'ach_fugitive',    cat:'Prologue',  name:'The Fugitive',       desc:'Complete the Prologue. Unmissable.'},
+  // ACT I
+  {id:'ach_intimidator', cat:'Act I',     name:'Intimidator',        desc:'Use the Intimidation dialogue option on anyone. Easy opportunity: when peasants confront Geralt upon entering Flotsam port after the Kayran attack.'},
+  {id:'ach_taster',      cat:'Act I',     name:'Taster',             desc:'Drink any potion. Unmissable — goes hand in hand with "Great Potion".'},
+  {id:'ach_greatpotion', cat:'Act I',     name:'Great Potion',       desc:'During "The Kayran: Ostmurk", brew the Mongoose potion from the cave behind the waterfall and drink it before fighting the Kayran.', questId:'1m9'},
+  {id:'ach_craftsman',   cat:'Act I',     name:'Craftsman',          desc:'Craft anything. Also triggers "Artful Dodger" (craft Kayran Trap) and "Backbone" (craft Kayran Armor). If no Witcher 1 import, you\'ll need to craft a silver sword anyway.'},
+  {id:'ach_apprentice',  cat:'Act I',     name:'Apprentice',         desc:'Use alchemy 5 separate times. Make 4x Grapeshot (one at a time, not all at once) for the Nekker contract, plus the Mongoose/Ostmurk potion.'},
+  {id:'ach_ricochet',    cat:'Act I',     name:'Ricochet',           desc:'Reflect an arrow back to kill the archer. Invest in the parrying ability in the base tree (needed anyway). Good opportunity during the "Malena" sidequest vs Scoia\'tael archers.', questId:'1s8'},
+  {id:'ach_focus',       cat:'Act I',     name:'Focus',              desc:'Counter-attack 3 times in a row. Get the counter ability from the skill tree, then fight Nekkers in the cave behind the waterfall: block, wait for the icon, attack.'},
+  {id:'ach_tornasunder', cat:'Act I',     name:'Torn Asunder!',      desc:'Kill 2 enemies with one bomb. Go to the Nekker cave behind the waterfall: damage two Nekkers, throw a Grapeshot between them.'},
+  {id:'ach_librarian',   cat:'Act I',     name:'Librarian',          desc:'Complete "In the Claws of Madness" — collect Hospital Files 1-4 from chests in the burned hospital south of Flotsam, then defeat the Nilfgaardian soldier wraith for Hospital Records.', questId:'1s6'},
+  {id:'ach_summer',      cat:'Act I',     name:'Summer Solstice',    desc:'Find the Summer Solstice menhir. Southeast of Flotsam beyond the bridge troll: pass the bandit hut, go further southeast to a pond. Activate your medallion.'},
+  {id:'ach_manshadows',  cat:'Act I',     name:'Man of the Shadows', desc:'Sneak through Loredo\'s garden without getting caught during "Indecent Proposal". Save beforehand. Knock out guards, grab the iron frame.', questId:'1m6'},
+  {id:'ach_artful',      cat:'Act I',     name:'Artful Dodger',      desc:'Craft and use the Kayran Trap during the Kayran fight. Save-scum: craft it, get the achievement, then reload and fight without it (it\'s expensive and the Yrden sign works just as well).', questId:'1m7'},
+  {id:'ach_kayran',      cat:'Act I',     name:'Oh My God! You Killed the Kayran! You Bastards!', desc:'Kill the Kayran (Act I mid-boss). Unmissable.', questId:'1m7'},
+  {id:'ach_backbone',    cat:'Act I',     name:'Backbone',           desc:'Loot the Kayran and craft the Kayran Armor from its remains. Save-scum recommended (expensive).', questId:'1m7'},
+  {id:'ach_toaedirn',    cat:'Act I',     name:'To Aedirn!',         desc:'Complete Act I. Unmissable. Remember: hand Iorveth his sword during the Letho/Roche ambush to stay on Iorveth\'s path.'},
+  // ACT II
+  {id:'ach_swordsmaster',cat:'Act II',    name:'Swordsmaster',       desc:'Unlock Combat Acumen (penultimate ability in the Swordsmanship branch). Needs 7 talent points in that branch. Save, dump all points into Swordsmanship, get achievement, reload and redistribute.'},
+  {id:'ach_magicmaster', cat:'Act II',    name:'Master of Magic',    desc:'Unlock Sense of Magic (penultimate in the Magic branch). Needs 7 talent points. Same save-scum method as Swordsmaster.'},
+  {id:'ach_alchmaster',  cat:'Act II',    name:'Master Alchemist',   desc:'Unlock Mutant (penultimate in the Alchemy branch). Needs 8 talent points. Same save-scum method. You can also use the stat reset in Act III sewers after finding "Malget\'s Notes" (From a Bygone Era quest).'},
+  {id:'ach_mutant',      cat:'Act II',    name:'Mutant',             desc:'Unlock 5 different mutagen-slot abilities in the skill tree and place mutagens in them. Save-scum: place first 5 mutagens you find, get achievement, reload.'},
+  {id:'ach_threesome',   cat:'Act II',    name:'Threesome',          desc:'Kill 3 enemies at once with the Combat Acumen adrenaline finisher. During the Siege of Vergen, fill your adrenaline bar, group 3 human enemies around you and press X. Only works on human-type enemies.'},
+  {id:'ach_blackops',    cat:'Act II',    name:'Black Ops',          desc:'(Iorveth path) Sneak through the Kaedweni Camp without getting spotted during "Where is Triss Merigold?". Save beforehand. If spotted near the end by a cook, Axii him and get to the exit.', questId:'2im11', pathOnly:'iorveth'},
+  {id:'ach_tourist',     cat:'Act II',    name:'Tourist',            desc:'(Roche path) Let Zyvik give you a full tour of the camp at the start of Act II. Don\'t ask him to take you to Henselt; follow him patiently until the achievement pops.', pathOnly:'roche'},
+  {id:'ach_gladiator',   cat:'Act II',    name:'Gladiator',          desc:'(Roche path) During "The Butcher of Cidaris" / "Ave Henselt!", defeat all 4 arena opponents by approaching Proximo in the afternoon.', questId:'2rm9', pathOnly:'roche'},
+  {id:'ach_heartbreaker',cat:'Act II',    name:'Heartbreaker',       desc:'(Roche path) After beating Ves in the arena, visit her in her tent in the Temerian camp to trigger the scene and the achievement.', questId:'2rb1', pathOnly:'roche'},
+  {id:'ach_necromancer', cat:'Act II',    name:'Necromancer',        desc:'(Roche path) Help Dethmold with the necromancy ritual (take a Gadwall potion first). Complete all 6 flashback phases without dying, tripping traps, or getting detected. Save beforehand.', pathOnly:'roche'},
+  {id:'ach_reasons',     cat:'Act II',    name:'Reasons of State',   desc:'(Roche path) During the Siege of Vergen, after striking down Henselt and his men, let Henselt go when Roche wants to kill him.', pathOnly:'roche'},
+  {id:'ach_fatman',      cat:'Act II',    name:'Fat Man',            desc:'Kill the Draugir (Act II main boss). Unmissable. Stunlock him with Aard and hack away if you have 4 Vigor points and a decent silver sword.'},
+  {id:'ach_aleaiacta',   cat:'Act II',    name:'Alea Iacta Est',     desc:'Complete Act II. Unmissable.'},
+  // ACT III
+  {id:'ach_winter',      cat:'Act III',   name:'Winter Solstice',    desc:'At the start of Act III, follow Iorveth through the caves (even on Roche path, take this route). At the end after the harpies, don\'t scale the breach immediately — run right until your medallion hums. Activate it.'},
+  {id:'ach_spellbreaker',cat:'Act III',   name:'Spellbreaker',       desc:'(Iorveth path) When given the choice, rescue Philippa Eilhart from jail instead of continuing to search for Triss. Complete the quest.', questId:'3im4', pathOnly:'iorveth'},
+  {id:'ach_dragonheart', cat:'Act III',   name:'Dragonheart',        desc:'(Iorveth path) At end of Act III, after the dragon fight, your choice (use Philippa\'s dagger or walk away) doesn\'t matter — you get the achievement either way.', pathOnly:'iorveth'},
+  {id:'ach_kingmaker',   cat:'Act III',   name:'Kingmaker',          desc:'(Roche path) When given the choice, help Roche rescue Anais (Foltest\'s daughter) from the Kaedwenis instead of searching for Triss. Complete the quest.', questId:'3rm5', pathOnly:'roche'},
+  {id:'ach_george',      cat:'Act III',   name:'Being Witcher George',desc:'(Roche path) At end of Act III, after the dragon fight, kill the dragon to get this achievement.', pathOnly:'roche'},
+  {id:'ach_witchhunter', cat:'Act III',   name:'Witch Hunter',       desc:'During "A Summit of Mages", follow Sila into her tower and watch the portal kill her (do not save her).', questId:'3im1'},
+  {id:'ach_sensitive',   cat:'Act III',   name:'Sensitive Guy',      desc:'During "A Summit of Mages", follow Sila into her tower and stop the broken portal to save her. Mutually exclusive with Witch Hunter in a single run; save-scum or do each in a separate playthrough.', questId:'3im1'},
+  {id:'ach_onceneough',  cat:'Act III',   name:'Once Ain\'t Enough', desc:'Complete Act III. Unmissable.'},
+  // EPILOGUE
+  {id:'ach_avenger',     cat:'Epilogue',  name:'Avenger',            desc:'In the Epilogue, fight and kill Letho. Do on Easy/Normal/Hard — the fight is much easier now than Act I. Good sword (Forgotten Vran Sword) and Vran Armor help greatly.'},
+  {id:'ach_oldfriends',  cat:'Epilogue',  name:'Old Friends',        desc:'In the Epilogue, spare Letho. Do on your Insane playthrough (no risk of dying in a fight).'},
+  {id:'ach_continued',   cat:'Epilogue',  name:'To Be Continued...',  desc:'Finish the epilogue and complete the game on any difficulty. Unmissable.'},
+  {id:'ach_madman',      cat:'Epilogue',  name:'Madman',             desc:'Complete the game on Insane difficulty (Hard + Permadeath). Tips: disable QTEs in settings; quicksave after every combat; never let health drop below 30%; reload if hit by hard-hitting enemies (Kayran, Golem, Bullvore); be a Trollfriend; spare Letho; never enter the cursed fog in Act II without an active quest.'},
+];
+
+// Map quest IDs to achievement IDs (which achievements show up on which quest page)
+const QUEST_ACHIEVEMENTS={
+  'pm4':  ['ach_eagleeye'],
+  '1m6':  ['ach_manshadows'],
+  '1m7':  ['ach_artful','ach_kayran','ach_backbone'],
+  '1m9':  ['ach_greatpotion'],
+  '1s6':  ['ach_librarian'],
+  '1s8':  ['ach_ricochet'],
+  '2im11':['ach_blackops'],
+  '2rm9': ['ach_gladiator'],
+  '2rb1': ['ach_heartbreaker'],
+  '3im1': ['ach_witchhunter','ach_sensitive'],
+  '3im4': ['ach_spellbreaker'],
+  '3rm5': ['ach_kingmaker'],
+};
+
 const TABS=[
-  {id:'overview',label:'⚔ Overview'},{id:'prologue',label:'Prologue'},{id:'ch1',label:'Chapter I'},
+  {id:'overview',label:'\u2694 Overview'},{id:'prologue',label:'Prologue'},{id:'ch1',label:'Chapter I'},
   {id:'ch2',label:'Chapter II'},{id:'ch3',label:'Chapter III'},{id:'build',label:'Build'},
   {id:'passives',label:'Passives'},{id:'books',label:'Books'},{id:'formulas',label:'Formulas'},
-  {id:'diagrams',label:'Diagrams'}
+  {id:'diagrams',label:'Diagrams'},{id:'achievements',label:'\uD83C\uDFC6 Achievements'}
 ];
+
+/* ═══ ACHIEVEMENT BADGE (for quest pages) ═══ */
+function AchievementBadge({achId,checked,onToggle}){
+  const ach=ACHIEVEMENTS.find(a=>a.id===achId);
+  if(!ach)return null;
+  const[open,setOpen]=useState(false);
+  const done=!!checked[achId];
+  return(
+    <div style={{marginLeft:'30px',marginBottom:'3px',borderLeft:`2px solid ${done?C.amber+'55':C.amber+'33'}`,paddingLeft:'8px'}}>
+      <div style={{display:'flex',alignItems:'center',gap:'5px',flexWrap:'wrap'}}>
+        <span style={{fontSize:'10px',flexShrink:0}}>🏆</span>
+        <span style={{fontFamily:FB,fontSize:'12px',color:done?C.doneTx:C.amber,textDecoration:done?'line-through':'none',flex:1}}>{ach.name}</span>
+        <button onClick={()=>setOpen(o=>!o)}
+          style={{fontFamily:FD,fontSize:'9px',letterSpacing:'1px',padding:'1px 6px',cursor:'pointer',
+            border:`1px solid ${C.amber}55`,background:'transparent',color:C.amber,borderRadius:'3px',
+            textTransform:'uppercase',flexShrink:0}}>
+          {open?'▲ Hide':'▼ How'}
+        </button>
+        <div onClick={()=>onToggle(achId)} style={{width:'13px',height:'13px',flexShrink:0,cursor:'pointer',
+          border:`1.5px solid ${done?C.amber:C.goldDk}`,borderRadius:'2px',
+          background:done?C.amber:'transparent',display:'flex',alignItems:'center',justifyContent:'center',
+          transition:'background 0.15s, border-color 0.15s',boxShadow:done?`0 0 5px ${C.amber}55`:'none'}}>
+          {done&&<span style={{color:C.bgDk,fontSize:'8px',fontWeight:'700'}}>✓</span>}
+        </div>
+      </div>
+      {open&&<div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic',marginTop:'4px',lineHeight:'1.4',
+        background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:'3px',padding:'6px 8px'}}>
+        {ach.desc}
+      </div>}
+    </div>
+  );
+}
+
+/* ═══ ACHIEVEMENTS TAB ═══ */
+function AchievementsTab({checked,onToggle,path}){
+  const cats=['Multi-Act','Prologue','Act I','Act II','Act III','Epilogue'];
+  const total=ACHIEVEMENTS.length;
+  const done=ACHIEVEMENTS.filter(a=>checked[a.id]).length;
+  const[openCats,setOpenCats]=useState(()=>{
+    const init={};cats.forEach(c=>{init[c]=true;});return init;
+  });
+  const toggleCat=cat=>setOpenCats(p=>({...p,[cat]:!p[cat]}));
+  return(
+    <div>
+      <div style={{background:`linear-gradient(135deg,${C.bgHdr},${C.bgCard})`,border:`1px solid ${C.border2}`,
+        borderRadius:'8px',padding:'14px 18px',marginBottom:'14px',display:'flex',gap:'16px',alignItems:'center'}}>
+        <div style={{fontSize:'28px'}}>🏆</div>
+        <div style={{flex:1}}>
+          <div style={{fontFamily:FD,fontSize:'10px',color:C.silv,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'4px'}}>Achievements</div>
+          <div style={{fontFamily:FD,fontSize:'26px',color:done===total?C.goldLt:C.gold,lineHeight:1,marginBottom:'6px'}}>{done}<span style={{fontSize:'14px',color:C.goldDk}}> / {total}</span></div>
+          <Bar done={done} total={total}/>
+        </div>
+      </div>
+      <div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic',marginBottom:'14px',padding:'8px 12px',background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:'4px',lineHeight:'1.5'}}>
+        🗺 52 achievements total — requires <strong style={{color:C.parch}}>2 playthroughs</strong>: Iorveth on Normal/Hard first, then Roche on Insane. Path-locked achievements are dimmed when you're on the other path. Click <em style={{color:C.amber}}>▼ How to get</em> on any achievement for tips.
+      </div>
+      {cats.map(cat=>{
+        const items=ACHIEVEMENTS.filter(a=>a.cat===cat);
+        const d=items.filter(a=>checked[a.id]).length;
+        const allDone=d===items.length&&items.length>0;
+        const isOpen=!!openCats[cat];
+        return(
+          <div key={cat} style={{marginBottom:'6px'}}>
+            <div onClick={()=>toggleCat(cat)}
+              style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 12px',
+                background:allDone?'#1a1408':C.bgHdr,cursor:'pointer',
+                border:`1px solid ${allDone?C.gold+'44':C.border}`,borderRadius:'4px',transition:'all 0.2s'}}>
+              <span style={{color:C.gold,fontSize:'10px',transition:'transform 0.2s',transform:isOpen?'rotate(90deg)':'rotate(0deg)'}}>▶</span>
+              <span style={{fontFamily:FD,fontSize:'12px',letterSpacing:'1px',color:allDone?C.goldLt:C.gold,textTransform:'uppercase',flex:1}}>{cat}</span>
+              {allDone&&<span style={{fontSize:'9px',color:C.goldLt,border:`1px solid ${C.gold}44`,borderRadius:'10px',padding:'1px 7px',fontFamily:FD}}>DONE</span>}
+              <Bar done={d} total={items.length}/>
+            </div>
+            {isOpen&&(
+              <div style={{background:C.bgCard,border:`1px solid ${C.border}`,borderTop:'none',borderRadius:'0 0 4px 4px',padding:'4px 0'}}>
+                {items.map(ach=>{
+                  const achDone=!!checked[ach.id];
+                  const pathLocked=ach.pathOnly&&path&&ach.pathOnly!==path;
+                  return <AchRow key={ach.id} ach={ach} achDone={achDone} pathLocked={pathLocked} checked={checked} onToggle={onToggle}/>;
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+function AchRow({ach,achDone,pathLocked,onToggle}){
+  const[hintOpen,setHintOpen]=useState(false);
+  return(
+    <div style={{padding:'5px 10px',borderRadius:'3px',
+      background:achDone?C.doneBg:'transparent',opacity:pathLocked?0.4:1}}
+      onMouseEnter={e=>{if(!achDone)e.currentTarget.style.background=C.bgHdr;}}
+      onMouseLeave={e=>{e.currentTarget.style.background=achDone?C.doneBg:'transparent';}}>
+      <div style={{display:'flex',alignItems:'flex-start',gap:'7px'}}>
+        <span style={{fontSize:'14px',marginTop:'2px',flexShrink:0}}>🏆</span>
+        <div style={{flex:1}}>
+          <div style={{display:'flex',alignItems:'center',gap:'5px',flexWrap:'wrap'}}>
+            <span style={{fontFamily:FB,fontSize:'14px',color:achDone?C.doneTx:C.amber,
+              textDecoration:achDone?'line-through':'none',flex:1,lineHeight:'1.3'}}>{ach.name}</span>
+            {ach.pathOnly&&(
+              <span style={{fontFamily:FD,fontSize:'8px',letterSpacing:'1px',padding:'1px 5px',
+                border:`1px solid ${ach.pathOnly==='iorveth'?'#4a8a4a':'#4a7aaa'}`,borderRadius:'2px',
+                color:ach.pathOnly==='iorveth'?'#7acc7a':'#7aaacc',flexShrink:0,textTransform:'uppercase'}}>
+                {ach.pathOnly==='iorveth'?'🌿 Iorveth':'⚔ Roche'}
+              </span>
+            )}
+            <button onClick={()=>setHintOpen(o=>!o)}
+              style={{fontFamily:FD,fontSize:'9px',letterSpacing:'1px',padding:'2px 8px',cursor:'pointer',
+                border:`1px solid ${C.amber}55`,background:'transparent',color:C.amber,borderRadius:'3px',
+                textTransform:'uppercase',flexShrink:0}}>
+              {hintOpen?'▲ Hide':'▼ How to get'}
+            </button>
+            <div onClick={()=>onToggle(ach.id)} style={{width:'15px',height:'15px',flexShrink:0,cursor:'pointer',
+              border:`1.5px solid ${achDone?C.amber:C.goldDk}`,borderRadius:'2px',
+              background:achDone?C.amber:'transparent',display:'flex',alignItems:'center',justifyContent:'center',
+              transition:'background 0.15s, border-color 0.15s',boxShadow:achDone?`0 0 5px ${C.amber}55`:'none'}}>
+              {achDone&&<span style={{color:C.bgDk,fontSize:'9px',fontWeight:'700'}}>✓</span>}
+            </div>
+          </div>
+          {hintOpen&&<div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,fontStyle:'italic',marginTop:'5px',lineHeight:'1.4',
+            background:C.bgHdr,border:`1px solid ${C.border}`,borderRadius:'3px',padding:'7px 10px'}}>
+            {ach.desc}
+          </div>}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App(){
   const[loaded,setLoaded]=useState(false);
@@ -847,7 +1062,7 @@ function App(){
   const c2data=path==='roche'?CHAPTER2.roche:CHAPTER2.iorveth;
   const c3data=path==='roche'?CHAPTER3.roche:CHAPTER3.iorveth;
   const c2title=path==='roche'?'Chapter II — Kaedwen':path==='iorveth'?'Chapter II — Vergen':'Chapter II';
-  const c3title=path==='roche'?'Chapter III — Roche':path==='iorveth'?'Chapter III — Iorveth':'Chapter III';
+  const c3title='Chapter III — Loc Muinne';
 
   return(
     <div style={{background:C.bgDk,minHeight:'100vh',color:C.parch,fontFamily:FB,
@@ -866,7 +1081,7 @@ function App(){
         </div>
       </div>
       {/* nav */}
-      <div style={{background:C.bgCard,borderBottom:`1px solid ${C.border}`,overflowX:'auto',whiteSpace:'nowrap'}}>
+      <div style={{background:C.bgCard,borderBottom:`1px solid ${C.border}`,overflowX:'auto',whiteSpace:'nowrap',position:'sticky',top:0,zIndex:100,boxShadow:'0 2px 12px #00000099'}}>
         <div style={{maxWidth:'1140px',margin:'0 auto',display:'flex',padding:'0 12px'}}>
           {TABS.map(t=>(
             <button key={t.id} onClick={()=>setTab(t.id)}
@@ -885,7 +1100,7 @@ function App(){
                tab==='ch2'?c2title:tab==='ch3'?c3title:
                tab==='build'?'Build Planner':tab==='passives'?'Passive Abilities':
                tab==='books'?`Books (${BOOKS.length})`:tab==='formulas'?`Formulas (${FORMULAS.length})`:
-               tab==='diagrams'?`Diagrams (${DIAGRAMS.length})`:''}
+               tab==='diagrams'?`Diagrams (${DIAGRAMS.length})`:tab==='achievements'?'Achievements':''}
             </h2>
           </div>
         )}
@@ -899,6 +1114,7 @@ function App(){
         {tab==='books'&&<CollectTab type="bk" items={BOOKS} checked={checked} onToggle={toggle} skipped={skipped.books} onSkipToggle={()=>toggleSkip('books')} label="Books"/>}
         {tab==='formulas'&&<CollectTab type="fo" items={FORMULAS} checked={checked} onToggle={toggle} skipped={skipped.formulas} onSkipToggle={()=>toggleSkip('formulas')} label="Alchemy Formulas"/>}
         {tab==='diagrams'&&<CollectTab type="dg" items={DIAGRAMS} checked={checked} onToggle={toggle} skipped={skipped.diagrams} onSkipToggle={()=>toggleSkip('diagrams')} label="Crafting Diagrams" warning="Some diagrams drop randomly — 100% may not be possible in a single playthrough."/>}
+        {tab==='achievements'&&<AchievementsTab checked={checked} onToggle={toggle} path={path}/>}
       </div>
       {!loaded&&<div style={{position:'fixed',inset:0,background:C.bgDk,display:'flex',alignItems:'center',justifyContent:'center',zIndex:9999}}><div style={{fontFamily:FD,fontSize:'13px',letterSpacing:'3px',color:C.gold,textTransform:'uppercase'}}>Loading...</div></div>}
     </div>
