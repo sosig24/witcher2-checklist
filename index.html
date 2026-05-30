@@ -673,7 +673,7 @@ function Overview({checked,path,darkDiff,skipped,onPathChange,onDarkChange,onRes
               style={{fontFamily:FD,fontSize:'10px',padding:'4px 12px',cursor:'pointer',letterSpacing:'1px',
                 border:`1px solid ${darkDiff?C.redLt:C.border}`,background:darkDiff?'#2a0808':'transparent',
                 color:darkDiff?C.redLt:C.parchDm,borderRadius:'3px',transition:'all 0.15s',textTransform:'uppercase'}}>
-              {darkDiff?'\u2620 Dark Mode ON':'\u2620 Dark Mode'}
+              {darkDiff?'☠ Dark Mode ON':'☠ Dark Mode'}
             </button>
           </div>
         </div>
@@ -1080,7 +1080,7 @@ function App(){
           </div>
           <div style={{display:'flex',gap:'8px'}}>
             {path&&<div style={{fontFamily:FD,fontSize:'9px',letterSpacing:'2px',padding:'3px 10px',border:`1px solid ${path==='roche'?'#4a7aaa':'#4a8a4a'}`,borderRadius:'3px',color:path==='roche'?'#7aaacc':'#7acc7a',textTransform:'uppercase'}}>{path==='roche'?'⚔ Roche':'🌿 Iorveth'}</div>}
-            {darkDiff&&<div style={{fontFamily:FD,fontSize:'9px',letterSpacing:'2px',padding:'3px 10px',border:`1px solid ${C.red}55`,borderRadius:'3px',color:C.redLt,textTransform:'uppercase'}}>\u2620 Dark</div>}
+            {darkDiff&&<div style={{fontFamily:FD,fontSize:'9px',letterSpacing:'2px',padding:'3px 10px',border:`1px solid ${C.red}55`,borderRadius:'3px',color:C.redLt,textTransform:'uppercase'}}>☠ Dark</div>}
           </div>
         </div>
       </div>
