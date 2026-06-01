@@ -882,8 +882,308 @@ const TABS=[
   {id:'overview',label:'\u2694 Overview'},{id:'prologue',label:'Prologue'},{id:'ch1',label:'Chapter I'},
   {id:'ch2',label:'Chapter II'},{id:'ch3',label:'Chapter III'},{id:'build',label:'Build'},
   {id:'passives',label:'Passives'},{id:'books',label:'Books'},{id:'formulas',label:'Formulas'},
-  {id:'diagrams',label:'Diagrams'},{id:'achievements',label:'\uD83C\uDFC6 Achievements'}
+  {id:'diagrams',label:'Diagrams'},{id:'achievements',label:'\uD83C\uDFC6 Achievements'},
+  {id:'dark_gear',label:'\u2620 Dark Gear',darkOnly:true},
 ];
+
+/* ═══ DARK GEAR DATA (source: witcher.fandom.com/wiki/Dark_Mode + Steam guide #1284882656) ═══ */
+const DARK_OUTFITS=[
+  {
+    id:'blasphemer',
+    chapter:'Chapter I',
+    name:"Blasphemer's Outfit",
+    items:["Blasphemer's armor","Blasphemer's boots","Blasphemer's gauntlets","Blasphemer's trousers","Anathema (steel sword)","Ultimatum (silver sword)"],
+    craftCost:515,
+    diagramCost:1756,
+    craftsmith:'Berthold Candeleria — dwarven blacksmith, Flotsam',
+    hardest:{name:'Yellow Meteorite Ore',tip:'Buy from Cedric (limited stock) or loot from endrega nests. Farm endregas before completing The Endrega Contract — save/reload respawns them.'},
+    ingredients:[
+      {id:'bl_timber',     name:'Timber',           need:5},
+      {id:'bl_ironore',    name:'Iron Ore',          need:16},
+      {id:'bl_silverore',  name:'Silver Ore',        need:12},
+      {id:'bl_hardleath',  name:'Hardened Leather',  need:16},
+      {id:'bl_studleath',  name:'Studded Leather',   need:20},
+      {id:'bl_robcloth',   name:'Robust Cloth',      need:20},
+      {id:'bl_twine',      name:'Twine',             need:4},
+      {id:'bl_nekteeth',   name:'Nekker Teeth',      need:9},
+      {id:'bl_nekclaws',   name:'Nekker Claws',      need:8},
+      {id:'bl_endrhide',   name:'Endrega Hide',      need:5},
+      {id:'bl_endrvenom',  name:'Endrega Venom',     need:2},
+      {id:'bl_yellowmet',  name:'Yellow Meteorite',  need:2,  rare:true},
+      {id:'bl_diamdust',   name:'Diamond Dust',      need:5},
+      {id:'bl_amthdust',   name:'Amethyst Dust',     need:4},
+    ],
+    farmingTips:[
+      {icon:'\u2694',text:"Don't complete The Nekker Contract — keep farming nekkers for teeth and claws, then sell the excess organs to build up Orens."},
+      {icon:'\u2694',text:'Farm endregas before finishing The Endrega Contract. Quick-save and reload next to a nest — they fully respawn every reload.'},
+      {icon:'\u2694',text:'Arm wrestling and brawling at the Flotsam inn have no entry limits — use them to grind Orens quickly.'},
+      {icon:'\u2694',text:'Yellow meteorite is the bottleneck. Buy from Cedric for ~100 Orens each, or check the merchant stalls regularly — stock refreshes.'},
+    ],
+  },
+  {
+    id:'oathbreaker',
+    chapter:'Chapter II',
+    name:"Oathbreaker's Outfit",
+    items:["Oathbreaker's armor","Oathbreaker's boots","Oathbreaker's gauntlets","Oathbreaker's trousers","Virgin (steel sword)","Black Unicorn (silver sword)"],
+    craftCost:1190,
+    diagramCost:3836,
+    craftsmith:'Lasota (Roche path, Kaedweni Camp) or Mael (Iorveth path, Vergen)',
+    hardest:{name:'Draugir Armor Fragment',tip:'Drops from the draugir at the start of Chapter II during the curse fight with King Henselt. If missed: Iorveth path players can collect it from the draugir in the mist; Roche players must wait for the Symbol of Hatred quest. Do not miss it — reload the autosave if needed.'},
+    ingredients:[
+      {id:'oa_timber',     name:'Timber',              need:5},
+      {id:'oa_ironore',    name:'Iron Ore',             need:16},
+      {id:'oa_silverore',  name:'Silver Ore',           need:14},
+      {id:'oa_hardleath',  name:'Hardened Leather',     need:18},
+      {id:'oa_studleath',  name:'Studded Leather',      need:20},
+      {id:'oa_robcloth',   name:'Robust Cloth',         need:20},
+      {id:'oa_twine',      name:'Twine',                need:10},
+      {id:'oa_amthdust',   name:'Amethyst Dust',        need:7},
+      {id:'oa_bluemeteo',  name:'Blue Meteorite',       need:2},
+      {id:'oa_diamdust',   name:'Diamond Dust',         need:3},
+      {id:'oa_draugfrag',  name:'Draugir Armor Fragment',need:1, rare:true},
+      {id:'oa_essdeath',   name:'Essence of Death',     need:4},
+      {id:'oa_harpfeath',  name:'Harpy Feathers',       need:6},
+    ],
+    farmingTips:[
+      {icon:'\u2694',text:'Farm harpies on the road northeast to the Visionary\'s house (Roche path). Step into and out of the candle circle in front to respawn them. Feathers sell for 9 Orens each.'},
+      {icon:'\u2694',text:'Iorveth path: harpies respawn in the gully as long as their nests are intact — do not destroy the nests early.'},
+      {icon:'\u2694',text:'Challenge Adam Pangratt to repeated arm wrestling for up to 100 Orens per match (unlocks after progressing in Bring it On: Kaedweni Camp). No limit on repetitions with at least 50 Orens in hand.'},
+      {icon:'\u2694',text:'Silver ore is scarce in Chapter II — hoard it from Chapter I before transitioning.'},
+      {icon:'\u2694',text:'Stock studded leather from Chapter I if you are on the Iorveth path — it is harder to find in Vergen.'},
+    ],
+  },
+  {
+    id:'kinslayer',
+    chapter:'Chapter III',
+    name:"Kinslayer's Outfit",
+    items:["Kinslayer's armor","Kinslayer's boots","Kinslayer's gauntlets","Kinslayer's trousers","Weeper (steel sword)","Mourner (silver sword)"],
+    craftCost:1625,
+    diagramCost:6306,
+    craftsmith:'Bras of Ban Ard — Loc Muinne',
+    hardest:{name:'Dragon Scales',tip:'Drops from the dragon at the start of Chapter III. Kill it before it flies away — get your hits in quickly during the opening sequence. Only one dragon is available in the chapter.'},
+    ingredients:[
+      {id:'ki_timber',     name:'Timber',           need:4},
+      {id:'ki_ironore',    name:'Iron Ore',          need:18},
+      {id:'ki_silverore',  name:'Silver Ore',        need:14},
+      {id:'ki_hardleath',  name:'Hardened Leather',  need:28},
+      {id:'ki_studleath',  name:'Studded Leather',   need:8},
+      {id:'ki_robcloth',   name:'Robust Cloth',      need:26},
+      {id:'ki_leather',    name:'Leather',           need:4},
+      {id:'ki_twine',      name:'Twine',             need:12},
+      {id:'ki_bluemeteo',  name:'Blue Meteorite',    need:2},
+      {id:'ki_dragonscl',  name:'Dragon Scales',     need:1,  rare:true},
+      {id:'ki_elemstone',  name:'Elemental Stone',   need:4},
+      {id:'ki_essdeath',   name:'Essence of Death',  need:2},
+      {id:'ki_gargoydust', name:'Gargoyle Dust',     need:9},
+      {id:'ki_harpfeath',  name:'Harpy Feathers',    need:8},
+      {id:'ki_harpsaliva', name:'Harpy Saliva',      need:2},
+      {id:'ki_trolltong',  name:'Troll Tongue',      need:1},
+    ],
+    farmingTips:[
+      {icon:'\u2694',text:'Kill gargoyles in the three basement rune puzzle rooms — they do not follow you down the stairs. Meditate inside to respawn them. Sell dust for solid Orens.'},
+      {icon:'\u2694',text:'Farm harpies in the entrance area of Loc Muinne. Kill them, then meditate 24 hours to respawn them. Feathers and saliva both sell well.'},
+      {icon:'\u2694',text:'Dragon Scales drop at the very start of Chapter III — kill the dragon quickly and loot it before progressing. You cannot go back.'},
+      {icon:'\u2694',text:"Troll Tongue drops from the troll encountered during the Act II/III transition cave — collect it then, or kill the bridge troll in Loc Muinne's ruins."},
+      {icon:'\u2694',text:'Gargoyle dust is plentiful but the gargoyle contract nests also drop it — keep an eye on every chest in the rune rooms.'},
+    ],
+  },
+];
+
+/* ═══ DARK GEAR TAB ═══ */
+function DarkGearTab({inventory,onInventoryChange}){
+  const[activeOutfit,setActiveOutfit]=useState('blasphemer');
+  const outfit=DARK_OUTFITS.find(o=>o.id===activeOutfit);
+
+  const totalCost=outfit.craftCost+outfit.diagramCost;
+  const have=id=>parseInt(inventory[id]||'0',10)||0;
+  const allReady=outfit.ingredients.every(ing=>have(ing.id)>=ing.need);
+
+  return(
+    <div>
+      {/* Header */}
+      <div style={{background:`linear-gradient(135deg,${C.bgHdr},${C.bgCard})`,border:`1px solid ${C.border2}`,
+        borderRadius:'8px',padding:'14px 18px',marginBottom:'14px'}}>
+        <div style={{fontFamily:FD,fontSize:'10px',color:C.redLt,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'6px'}}>
+          ☠ Dark Mode Exclusive Equipment
+        </div>
+        <div style={{fontFamily:FB,fontSize:'13px',color:C.parchDm,lineHeight:'1.5'}}>
+          Three cursed outfits — one per chapter. Each set grants <strong style={{color:C.parch}}>vampiric life steal</strong> when complete.
+          Cursed swords drain Geralt's vitality while the set is incomplete — craft the armor first, then equip both swords together.
+          Source: <span style={{color:C.goldDk}}>witcher.fandom.com/wiki/Dark_Mode</span>
+        </div>
+      </div>
+
+      {/* Outfit selector tabs */}
+      <div style={{display:'flex',gap:'4px',marginBottom:'16px',borderBottom:`1px solid ${C.border}`}}>
+        {DARK_OUTFITS.map(o=>{
+          const active=activeOutfit===o.id;
+          const items=o.ingredients;
+          const readyCount=items.filter(ing=>have(ing.id)>=ing.need).length;
+          const complete=readyCount===items.length;
+          return(
+            <button key={o.id} onClick={()=>setActiveOutfit(o.id)}
+              style={{fontFamily:FD,fontSize:'10px',letterSpacing:'1px',padding:'9px 14px',
+                border:'none',borderBottom:`3px solid ${active?C.redLt:'transparent'}`,
+                background:'transparent',cursor:'pointer',whiteSpace:'nowrap',
+                color:active?C.redLt:complete?C.goldDk:C.parchDm,
+                textTransform:'uppercase',transition:'all 0.12s'}}>
+              {o.chapter}
+              {complete&&<span style={{marginLeft:'6px',fontSize:'8px',color:C.gold}}>✓</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Outfit name + cost overview */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr auto',gap:'12px',alignItems:'start',marginBottom:'14px'}}>
+        <div>
+          <div style={{fontFamily:FD,fontSize:'16px',color:C.redLt,letterSpacing:'2px',marginBottom:'4px'}}>{outfit.name}</div>
+          <div style={{fontFamily:FB,fontSize:'12px',color:C.parchDm,marginBottom:'4px'}}>
+            <strong style={{color:C.parch}}>Craftsmith:</strong> {outfit.craftsmith}
+          </div>
+          <div style={{display:'flex',gap:'16px',flexWrap:'wrap',marginTop:'6px'}}>
+            {[
+              {label:'Diagrams',val:`${outfit.diagramCost.toLocaleString()} Orens`},
+              {label:'Crafting',val:`${outfit.craftCost.toLocaleString()} Orens`},
+              {label:'Total',val:`${totalCost.toLocaleString()} Orens`},
+            ].map(({label,val})=>(
+              <div key={label} style={{background:C.bgHdr,border:`1px solid ${C.border}`,borderRadius:'4px',padding:'6px 10px'}}>
+                <div style={{fontFamily:FD,fontSize:'9px',color:C.parchDm,letterSpacing:'1.5px',textTransform:'uppercase'}}>{label}</div>
+                <div style={{fontFamily:FD,fontSize:'13px',color:C.gold,marginTop:'2px'}}>{val}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {allReady&&(
+          <div style={{background:'#1a0e08',border:`1px solid ${C.gold}55`,borderRadius:'6px',padding:'10px 14px',textAlign:'center'}}>
+            <div style={{fontFamily:FD,fontSize:'20px',color:C.gold}}>✓</div>
+            <div style={{fontFamily:FD,fontSize:'9px',color:C.goldLt,letterSpacing:'1px',textTransform:'uppercase',marginTop:'2px'}}>Ready to craft</div>
+          </div>
+        )}
+      </div>
+
+      {/* Rare ingredient warning */}
+      <div style={{background:'#1c0e0a',border:`1px solid ${C.red}55`,borderRadius:'5px',padding:'10px 14px',marginBottom:'14px',
+        display:'flex',gap:'10px',alignItems:'flex-start'}}>
+        <span style={{color:C.redLt,fontSize:'13px',flexShrink:0,marginTop:'1px'}}>⚠</span>
+        <div>
+          <div style={{fontFamily:FD,fontSize:'10px',color:C.redLt,letterSpacing:'1px',textTransform:'uppercase',marginBottom:'3px'}}>
+            Hardest ingredient — {outfit.hardest.name}
+          </div>
+          <div style={{fontFamily:FB,fontSize:'13px',color:C.parchDm,lineHeight:'1.4'}}>{outfit.hardest.tip}</div>
+        </div>
+      </div>
+
+      {/* Items in outfit */}
+      <div style={{fontFamily:FD,fontSize:'10px',color:C.parchDm,letterSpacing:'2px',textTransform:'uppercase',marginBottom:'6px'}}>
+        Set Pieces
+      </div>
+      <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginBottom:'16px'}}>
+        {outfit.items.map(item=>(
+          <span key={item} style={{fontFamily:FB,fontSize:'12px',color:C.parch,
+            background:C.bgHdr,border:`1px solid ${C.border}`,borderRadius:'3px',padding:'3px 8px'}}>
+            {item}
+          </span>
+        ))}
+      </div>
+
+      {/* Ingredient calculator */}
+      <div style={{fontFamily:FD,fontSize:'10px',color:C.parchDm,letterSpacing:'2px',textTransform:'uppercase',marginBottom:'8px'}}>
+        Ingredient Tracker
+      </div>
+
+      {/* Column headers */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 72px 48px 48px',gap:'0',
+        padding:'6px 12px',background:C.bgHdr,border:`1px solid ${C.border}`,
+        borderRadius:'4px 4px 0 0',marginBottom:'0'}}>
+        {['Ingredient','Have','Need',''].map((h,i)=>(
+          <div key={i} style={{fontFamily:FD,fontSize:'9px',color:C.parchDm,letterSpacing:'1.5px',
+            textTransform:'uppercase',textAlign:i>0?'center':'left'}}>{h}</div>
+        ))}
+      </div>
+
+      <div style={{border:`1px solid ${C.border}`,borderTop:'none',borderRadius:'0 0 4px 4px',overflow:'hidden'}}>
+        {outfit.ingredients.map((ing,idx)=>{
+          const haveVal=have(ing.id);
+          const met=haveVal>=ing.need;
+          const surplus=haveVal>ing.need;
+          const rowBg=idx%2===0?C.bgCard:C.bgMid;
+          return(
+            <div key={ing.id}
+              style={{display:'grid',gridTemplateColumns:'1fr 72px 48px 48px',gap:'0',
+                padding:'7px 12px',background:met?'#0e1a0e':rowBg,
+                borderBottom:`1px solid ${C.border}`,alignItems:'center',
+                transition:'background 0.15s'}}>
+              {/* Name */}
+              <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                {ing.rare&&<span style={{fontFamily:FD,fontSize:'8px',color:C.redLt,
+                  border:`1px solid ${C.red}55`,borderRadius:'2px',padding:'0 4px',letterSpacing:'0.5px'}}>RARE</span>}
+                <span style={{fontFamily:FB,fontSize:'13px',color:met?C.greenLt:C.parch}}>{ing.name}</span>
+              </div>
+              {/* Have input */}
+              <div style={{textAlign:'center'}}>
+                <input
+                  type='number' min='0' value={inventory[ing.id]??''}
+                  placeholder='0'
+                  onChange={e=>{
+                    const v=e.target.value;
+                    onInventoryChange(ing.id, v===''?'':Math.max(0,parseInt(v)||0).toString());
+                  }}
+                  style={{width:'52px',background:C.bgDk,border:`1px solid ${met?C.green:C.border2}`,
+                    borderRadius:'3px',padding:'4px 6px',color:met?C.greenLt:C.parch,
+                    fontFamily:FD,fontSize:'11px',textAlign:'center',outline:'none',
+                    transition:'border-color 0.12s, color 0.12s'}}
+                />
+              </div>
+              {/* Need */}
+              <div style={{fontFamily:FD,fontSize:'12px',color:C.parchDm,textAlign:'center'}}>{ing.need}</div>
+              {/* Status */}
+              <div style={{textAlign:'center'}}>
+                {met
+                  ?<span style={{fontFamily:FD,fontSize:'10px',color:C.greenLt}}>
+                    {surplus?`+${haveVal-ing.need}`:'✓'}
+                  </span>
+                  :<span style={{fontFamily:FD,fontSize:'10px',color:haveVal>0?C.amber:C.redLt}}>
+                    -{ing.need-haveVal}
+                  </span>
+                }
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Summary row */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 72px 48px 48px',gap:'0',
+        padding:'8px 12px',background:C.bgHdr,border:`1px solid ${C.border}`,
+        borderTop:'none',borderRadius:'0 0 4px 4px',marginTop:'0',marginBottom:'20px',alignItems:'center'}}>
+        <span style={{fontFamily:FD,fontSize:'10px',color:allReady?C.goldLt:C.parchDm,letterSpacing:'1px',textTransform:'uppercase'}}>
+          {allReady?'All ingredients ready!':
+            `${outfit.ingredients.filter(i=>have(i.id)>=i.need).length} / ${outfit.ingredients.length} ingredients met`}
+        </span>
+        <span/>
+        <span style={{fontFamily:FD,fontSize:'10px',color:allReady?C.greenLt:C.redLt,textAlign:'center'}}>
+          {outfit.ingredients.reduce((s,i)=>s+i.need,0)}
+        </span>
+        <span/>
+      </div>
+
+      {/* Oren Farming Tips */}
+      <div style={{fontFamily:FD,fontSize:'10px',color:C.amber,letterSpacing:'2px',textTransform:'uppercase',marginBottom:'10px'}}>
+        Oren Farming Tips — {outfit.chapter}
+      </div>
+      <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'8px'}}>
+        {outfit.farmingTips.map((tip,i)=>(
+          <div key={i} style={{display:'flex',gap:'10px',alignItems:'flex-start',
+            padding:'9px 12px',background:C.bgCard,border:`1px solid ${C.border}`,borderRadius:'4px'}}>
+            <span style={{color:C.amber,flexShrink:0,marginTop:'1px',fontSize:'12px'}}>{tip.icon}</span>
+            <span style={{fontFamily:FB,fontSize:'13px',color:C.parchDm,lineHeight:'1.4'}}>{tip.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ═══ ACHIEVEMENT BADGE (for quest pages) ═══ */
 function AchievementBadge({achId,checked,onToggle}){
@@ -1021,12 +1321,13 @@ function App(){
   const[darkDiff,setDarkDiff]=useState(false);
   const[checked,setChecked]=useState({});
   const[skipped,setSkipped]=useState({books:false,formulas:false,diagrams:false,passives:false});
+  const[darkInventory,setDarkInventory]=useState({});
 
   useEffect(()=>{
     async function load(){
       try{
         const r=await window.storage.get('w2v5');
-        if(r){const d=JSON.parse(r.value);setPath(d.path??null);setDarkDiff(d.darkDiff??false);setChecked(d.checked??{});setSkipped(d.skipped??{books:false,formulas:false,diagrams:false,passives:false});}
+        if(r){const d=JSON.parse(r.value);setPath(d.path??null);setDarkDiff(d.darkDiff??false);setChecked(d.checked??{});setSkipped(d.skipped??{books:false,formulas:false,diagrams:false,passives:false});setDarkInventory(d.darkInventory??{});}
       }catch(e){}
       setLoaded(true);
     }
@@ -1035,8 +1336,8 @@ function App(){
 
   useEffect(()=>{
     if(!loaded)return;
-    window.storage.set('w2v5',JSON.stringify({path,darkDiff,checked,skipped})).catch(()=>{});
-  },[path,darkDiff,checked,skipped,loaded]);
+    window.storage.set('w2v5',JSON.stringify({path,darkDiff,checked,skipped,darkInventory})).catch(()=>{});
+  },[path,darkDiff,checked,skipped,darkInventory,loaded]);
 
   // Track timestamps for intelligent sorting
   const toggle=useCallback((id)=>{
@@ -1051,11 +1352,21 @@ function App(){
     });
   },[]);
 
+  const handleInventoryChange=useCallback((id,val)=>{
+    setDarkInventory(prev=>({...prev,[id]:val}));
+  },[]);
+
+  // If dark mode is turned off and dark_gear tab is active, switch back to overview
+  useEffect(()=>{
+    if(!darkDiff&&tab==='dark_gear')setTab('overview');
+  },[darkDiff]);
+
   const toggleSkip=key=>setSkipped(p=>({...p,[key]:!p[key]}));
   const handleReset=()=>{
     if(confirm('Reset all progress? This cannot be undone.')){
       setChecked({});setPath(null);setDarkDiff(false);
       setSkipped({books:false,formulas:false,diagrams:false,passives:false});
+      setDarkInventory({});
     }
   };
 
@@ -1063,6 +1374,8 @@ function App(){
   const c3data=path==='roche'?CHAPTER3.roche:CHAPTER3.iorveth;
   const c2title=path==='roche'?'Chapter II — Kaedwen':path==='iorveth'?'Chapter II — Vergen':'Chapter II';
   const c3title='Chapter III — Loc Muinne';
+
+  const visibleTabs=TABS.filter(t=>!t.darkOnly||darkDiff);
 
   return(
     <div style={{background:C.bgDk,minHeight:'100vh',color:C.parch,fontFamily:FB,
@@ -1083,9 +1396,12 @@ function App(){
       {/* nav */}
       <div style={{background:C.bgCard,borderBottom:`1px solid ${C.border}`,overflowX:'auto',whiteSpace:'nowrap',position:'sticky',top:0,zIndex:100,boxShadow:'0 2px 12px #00000099'}}>
         <div style={{maxWidth:'1140px',margin:'0 auto',display:'flex',padding:'0 12px'}}>
-          {TABS.map(t=>(
+          {visibleTabs.map(t=>(
             <button key={t.id} onClick={()=>setTab(t.id)}
-              style={{fontFamily:FD,fontSize:'10px',letterSpacing:'1px',padding:'11px 13px',cursor:'pointer',background:'transparent',border:'none',whiteSpace:'nowrap',borderBottom:`2px solid ${tab===t.id?C.gold:'transparent'}`,color:tab===t.id?C.gold:C.parchDm,textTransform:'uppercase',transition:'all 0.12s'}}>
+              style={{fontFamily:FD,fontSize:'10px',letterSpacing:'1px',padding:'11px 13px',cursor:'pointer',background:'transparent',border:'none',whiteSpace:'nowrap',
+                borderBottom:`2px solid ${tab===t.id?t.darkOnly?C.redLt:C.gold:'transparent'}`,
+                color:tab===t.id?t.darkOnly?C.redLt:C.gold:t.darkOnly?C.red+'99':C.parchDm,
+                textTransform:'uppercase',transition:'all 0.12s'}}>
               {t.label}
             </button>
           ))}
@@ -1095,12 +1411,15 @@ function App(){
       <div style={{maxWidth:'1140px',margin:'0 auto',padding:'20px 14px'}}>
         {tab!=='overview'&&(
           <div style={{marginBottom:'18px',paddingBottom:'10px',borderBottom:`1px solid ${C.border}`}}>
-            <h2 style={{fontFamily:FD,fontSize:'17px',fontWeight:'600',color:C.gold,letterSpacing:'3px',textTransform:'uppercase',margin:0}}>
+            <h2 style={{fontFamily:FD,fontSize:'17px',fontWeight:'600',
+              color:tab==='dark_gear'?C.redLt:C.gold,
+              letterSpacing:'3px',textTransform:'uppercase',margin:0}}>
               {tab==='prologue'?'Prologue':tab==='ch1'?'Chapter I — Flotsam':
                tab==='ch2'?c2title:tab==='ch3'?c3title:
                tab==='build'?'Build Planner':tab==='passives'?'Passive Abilities':
                tab==='books'?`Books (${BOOKS.length})`:tab==='formulas'?`Formulas (${FORMULAS.length})`:
-               tab==='diagrams'?`Diagrams (${DIAGRAMS.length})`:tab==='achievements'?'Achievements':''}
+               tab==='diagrams'?`Diagrams (${DIAGRAMS.length})`:tab==='achievements'?'Achievements':
+               tab==='dark_gear'?'Dark Mode Equipment — Ingredient Calculator':''}
             </h2>
           </div>
         )}
@@ -1115,6 +1434,7 @@ function App(){
         {tab==='formulas'&&<CollectTab type="fo" items={FORMULAS} checked={checked} onToggle={toggle} skipped={skipped.formulas} onSkipToggle={()=>toggleSkip('formulas')} label="Alchemy Formulas"/>}
         {tab==='diagrams'&&<CollectTab type="dg" items={DIAGRAMS} checked={checked} onToggle={toggle} skipped={skipped.diagrams} onSkipToggle={()=>toggleSkip('diagrams')} label="Crafting Diagrams" warning="Some diagrams drop randomly — 100% may not be possible in a single playthrough."/>}
         {tab==='achievements'&&<AchievementsTab checked={checked} onToggle={toggle} path={path}/>}
+        {tab==='dark_gear'&&darkDiff&&<DarkGearTab inventory={darkInventory} onInventoryChange={handleInventoryChange}/>}
       </div>
       {!loaded&&<div style={{position:'fixed',inset:0,background:C.bgDk,display:'flex',alignItems:'center',justifyContent:'center',zIndex:9999}}><div style={{fontFamily:FD,fontSize:'13px',letterSpacing:'3px',color:C.gold,textTransform:'uppercase'}}>Loading...</div></div>}
     </div>
